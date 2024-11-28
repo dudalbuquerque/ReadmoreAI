@@ -1,1 +1,2 @@
-# CAA
+# CAA (Comunicação Aumentativa e Alternativa)
+
