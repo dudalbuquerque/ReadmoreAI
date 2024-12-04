@@ -1,7 +1,7 @@
-# MVP para Jogo "PalavrIA"
+# PalavrIA
 
 ## Objetivo
-Desenvolver um MVP de um jogo estilo "Termo" (como o "Wordle"), onde os jogadores tentam adivinhar uma palavra secreta em um número limitado de tentativas, com feedback visual sobre as tentativas.
+Jogo estilo "Termo" (como o "Wordle"), onde os jogadores tentam adivinhar uma palavra secreta em um número limitado de tentativas, com feedback visual sobre as tentativas.
 
 ---
 
