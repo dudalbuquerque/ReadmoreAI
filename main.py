@@ -1,8 +1,9 @@
-import google.generativeai as ai
+import google.generativeai as genai
 
 API_KEY = ''
+genai.configure(api_key=API_KEY)
+model = genai.GenerativeModel('gemini-pro')
 
-ai.configure(api_key = API_KEY)
-model = ai.GenerativeModel('gemini-pro')
-word = model.generate_content('Gere uma palavra aleatória em português com 5 letras')
-print(word.text)
+base = input("Digite um livro e/ou gênero literário que você gosteria de ler: ")
+response = model.generate_content(f'Recomende 3 livro com base em {base}')
+print(response.text)
