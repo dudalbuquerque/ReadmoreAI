@@ -1,7 +1,7 @@
 import streamlit
 
 def page():
-    streamlit.image("img/user.png", width=100)
+    # streamlit.image("img/user.png", width=100)
 
     streamlit.title("Login")
     username = streamlit.text_input("Nome de Usuário", placeholder="Digite seu nome")
