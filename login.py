@@ -1,6 +1,9 @@
 import streamlit
+import initialize
 
-def page():
+initialize.session_state()
+
+def page_login():
     # streamlit.image("img/user.png", width=100)
 
     streamlit.title("Login")
@@ -19,4 +22,5 @@ def page():
                 streamlit.error("Por favor, preencha todos os campos.")
     with c5:
         if streamlit.button("Cadastrar-se", use_container_width=True):
-            streamlit.error("Erro")
+            streamlit.session_state.page = "Cadastro"
+            streamlit.rerun()
