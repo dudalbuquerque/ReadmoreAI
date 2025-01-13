@@ -1,7 +1,6 @@
 import streamlit
 
-import initialize
-import pages
+from src import initialize, pages
 
 # Inicializador de Variáveis do Usuário
 initialize.session_state()

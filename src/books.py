@@ -3,6 +3,13 @@ import requests
 import os
 from PIL import Image
 
+# Define o caminho absoluto para a pasta `img`
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+IMG_DIR = os.path.join(BASE_DIR, "img")
+
+# Certifica-se de que a pasta `img` existe
+os.makedirs(IMG_DIR, exist_ok=True)
+
 def resize(path: str, size=(360, 580)) -> str:
     with Image.open(path) as image:
         resized = image.resize(size)
@@ -65,7 +72,7 @@ def get_book_image(book_name):
 
 def download_image(url, book_name):
     safe_name = "".join(c for c in book_name if c.isalnum() or c in " _-").strip()
-    file_path = os.path.join("img", f"{safe_name}.jpg")
+    file_path = os.path.join(IMG_DIR, f"{safe_name}.jpg")
 
     response = requests.get(url)
     if response.status_code == 200:
