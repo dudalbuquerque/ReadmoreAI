@@ -1,9 +1,14 @@
-import google.generativeai as genai
+import streamlit
 
-API_KEY = ''
-genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-pro')
+import initialize
+import pages
 
-base = input("Digite um livro e/ou gênero literário que você gosteria de ler: ")
-response = model.generate_content(f'Recomende 3 livro com base em {base}')
-print(response.text)
+# Inicializador de Variáveis do Usuário
+initialize.session_state()
+
+if streamlit.session_state.page == "Login":
+    pages.login()
+elif streamlit.session_state.page == "Cadastro":
+    pages.cadastro()
+elif streamlit.session_state.page == "Main":
+    pages.main()
