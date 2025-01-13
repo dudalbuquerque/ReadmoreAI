@@ -2,10 +2,15 @@ import streamlit
 import requests
 import os
 from PIL import Image
+import google.generativeai as genai
+
+# Gemini
+genai.configure(api_key='SUA-API-KEY')
+model = genai.GenerativeModel('gemini-pro')
 
 # Define o caminho absoluto para a pasta `img`
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-IMG_DIR = os.path.join(BASE_DIR, "img")
+IMG_DIR = os.path.join(BASE_DIR, 'img')
 
 # Certifica-se de que a pasta `img` existe
 os.makedirs(IMG_DIR, exist_ok=True)
@@ -37,27 +42,68 @@ def add_book() -> None:
 def show_books() -> None:
     streamlit.markdown("## Meus Livros")
     c1, c2, c3, c4, c5 = streamlit.columns([1, 1, 1, 1, 1])
-    for i, book in enumerate(streamlit.session_state.books):
+    
+    # Garantir que as listas tenham o mesmo comprimento
+    num_books = min(len(streamlit.session_state.books), len(streamlit.session_state.titles))
+    
+    for i in range(num_books):
+        book = streamlit.session_state.books[i]
+        name = streamlit.session_state.titles[i]
+        
         if i % 5 == 0:
             with c1:
                 streamlit.image(book)
+                streamlit.write(name)
         elif i % 5 == 1:
             with c2:
                 streamlit.image(book)
+                streamlit.write(name)
         elif i % 5 == 2:
             with c3:
                 streamlit.image(book)
+                streamlit.write(name)
         elif i % 5 == 3:
             with c4:
                 streamlit.image(book)
+                streamlit.write(name)
         elif i % 5 == 4:
             with c5:
                 streamlit.image(book)
+                streamlit.write(name)
 
 def suggest_books() -> None:
     streamlit.markdown("## Livros Sugeridos")
     if streamlit.button("Sugerir Livros", use_container_width=True, type="primary"):
-        pass
+        gen_book()
+    c1, c2, c3, c4, c5 = streamlit.columns([1, 1, 1, 1, 1])
+    
+    # Garantir que as listas tenham o mesmo comprimento
+    num_books = min(len(streamlit.session_state.sugeridos), len(streamlit.session_state.nomes_sugeridos))
+    
+    for i in range(num_books):
+        book = streamlit.session_state.sugeridos[i]
+        book_name = streamlit.session_state.nomes_sugeridos[i]
+        
+        if i % 5 == 0:
+            with c1:
+                streamlit.image(book)
+                streamlit.write(book_name)
+        elif i % 5 == 1:
+            with c2:
+                streamlit.image(book)
+                streamlit.write(book_name)
+        elif i % 5 == 2:
+            with c3:
+                streamlit.image(book)
+                streamlit.write(book_name)
+        elif i % 5 == 3:
+            with c4:
+                streamlit.image(book)
+                streamlit.write(book_name)
+        elif i % 5 == 4:
+            with c5:
+                streamlit.image(book)
+                streamlit.write(book_name)
 
 def get_book_image(book_name):
     api_url = "https://www.googleapis.com/books/v1/volumes"
@@ -88,3 +134,15 @@ def get_book(book_name):
         return None
     else:
         return download_image(url, book_name)
+
+def gen_book():
+    ai = model.generate_content(f'Gere uma sugestão de livro (apenas o nome do livro e do author) com base nestes livros já lidos: {str(streamlit.session_state.titles)} e que não seja um destes: {streamlit.session_state.sugeridos}')
+
+    book_name = ai.candidates[0].content.parts[0].text
+    book_img = get_book(book_name)
+    
+    # Verificando se o nome do livro e a imagem não são None antes de adicionar
+    if book_name and book_img is not None:
+        streamlit.session_state.nomes_sugeridos.append(book_name)
+        streamlit.session_state.sugeridos.append(resize(book_img))
+        streamlit.rerun()

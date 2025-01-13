@@ -1,3 +1,11 @@
-requests==2.32.3
+Pillow==11.1.0
+protobuf==5.29.3
+Requests==2.32.3
 streamlit==1.41.1
-toml==0.10.2
+google-ai-generativelanguage==0.6.10
+google-api-core==2.24.0
+google-api-python-client==2.158.0
+google-auth==2.37.0
+google-auth-httplib2==0.2.0
+google-generativeai==0.8.3
+googleapis-common-protos==1.66.0

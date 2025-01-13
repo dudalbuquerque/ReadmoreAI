@@ -18,3 +18,7 @@ def session_state():
         streamlit.session_state.messages = []
     if "book_input" not in streamlit.session_state:
         streamlit.session_state.book_input = False
+    if "sugeridos" not in streamlit.session_state:
+        streamlit.session_state.sugeridos = []
+    if "nomes_sugeridos" not in streamlit.session_state:
+        streamlit.session_state.nomes_sugeridos = []
