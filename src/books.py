@@ -3,9 +3,10 @@ import requests
 import os
 from PIL import Image
 import google.generativeai as genai
+from main import API_KEY
 
 # Gemini
-genai.configure(api_key='SUA-API-KEY')
+genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
 # Define o caminho absoluto para a pasta `img`
