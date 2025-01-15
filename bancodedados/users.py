@@ -1,12 +1,14 @@
+import streamlit
+
 class USER:
     def __init__(self, db):
             self.db = db
 
-    def register_user(self, user_name, user_date_of_birt, user_email, user_password):
+    def register_user(self, user_name, user_date_of_birth, user_email, user_password):
             # checando user, pelo email
             self.db.cursor.execute("SELECT id FROM Readmore_users WHERE email = ?", (user_email,)) 
             if self.db.cursor.fetchone():
-                print("O email já está cadastrado!")
+                streamlit.error("O email já está cadastrado!")
                 return False
             
             # insere o novo usuário
@@ -14,7 +16,7 @@ class USER:
                 """
                 INSERT INTO Readmore_users(name, date_of_birth, email, password, registration_date)
                 VALUES (?, ?, ?, ?, CURRENT_DATE);
-                """, (user_name, user_date_of_birt, user_email, user_password)
+                """, (user_name, user_date_of_birth, user_email, user_password)
             )
             self.db.conn.commit()
             print("Cadastrado com sucesso!")
@@ -25,18 +27,13 @@ class USER:
         self.db.cursor.execute(query, (user_id,))
         resultado_senha = self.db.cursor.fetchone()
 
-        for _ in range(3):
-            if resultado_senha and resultado_senha[0] == user_password:
-                print("Senha correta!")
-                return True
-            user_password = input("Ops!! Sua senha está incorreta, tente novamente: ")
-
-        print("Parece que você esqueceu a senha!")
+        if resultado_senha and resultado_senha[0] == user_password:
+            return True
         return False
 
-    def get_id(self, user_email):
-        query = "SELECT id FROM Readmore_users WHERE email = ?"
-        self.db.cursor.execute(query, (user_email,))
+    def get_id(self, username):
+        query = "SELECT id FROM Readmore_users WHERE name = ?"
+        self.db.cursor.execute(query, (username,))
         copia_id = self.db.cursor.fetchone()
 
         if copia_id:
@@ -44,7 +41,6 @@ class USER:
         else:
             print("Usuário não encontrado!")
             return None
-        
     """
     def esqueceu_senha(self, user_id, new_password):
         query = "UPDATE Readmore_users SET senha = ? WHERE id = ? ;"

@@ -3,8 +3,8 @@ import requests
 import os
 from PIL import Image
 import google.generativeai as genai
-from main import API_KEY
 
+API_KEY = 'AIzaSyDfQ4L3yRt6-mj5Qyhep3hfAfxpSdFlisk'
 # Gemini
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-pro')
