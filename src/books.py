@@ -4,7 +4,7 @@ import os
 from PIL import Image
 import google.generativeai as genai
 
-API_KEY = 'AIzaSyDfQ4L3yRt6-mj5Qyhep3hfAfxpSdFlisk'
+API_KEY = 'SUA-CHAVE-API'
 # Gemini
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-pro')
