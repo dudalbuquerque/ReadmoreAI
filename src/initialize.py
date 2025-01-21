@@ -6,6 +6,8 @@ def session_state():
     
     if "username" not in streamlit.session_state:
         streamlit.session_state.username = ''
+    if "id" not in streamlit.session_state:
+        streamlit.session_state.id = ''
     if "email" not in streamlit.session_state:
         streamlit.session_state.email = ''
     if "idade" not in streamlit.session_state:

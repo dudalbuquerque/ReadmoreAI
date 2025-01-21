@@ -47,6 +47,7 @@ def login():
             elif user.check_password(id_user, password):
                 # Login bem-sucedido
                 streamlit.session_state.username = username
+                streamlit.session_state.id = id_user
                 streamlit.session_state.page = "Main"
                 streamlit.session_state.login_attempts = 0  # Resetar tentativas
                 streamlit.session_state.incorrect_password = False  # Resetar flag
@@ -115,6 +116,7 @@ def cadastro():
             if streamlit.button("Voltar para Login", use_container_width=True):
                 streamlit.session_state.page = "Login"
                 streamlit.rerun()
+
 def main():
     books2.show_books()
     books2.add_book()

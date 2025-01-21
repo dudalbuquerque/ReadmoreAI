@@ -40,7 +40,7 @@ class USER:
             return copia_id[0]
         else:
             print("Usuário não encontrado!")
-            return None
+            return None      
     """
     def esqueceu_senha(self, user_id, new_password):
         query = "UPDATE Readmore_users SET senha = ? WHERE id = ? ;"

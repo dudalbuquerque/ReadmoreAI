@@ -1,10 +1,11 @@
 import streamlit
 import requests
+from src import initialize
 import google.generativeai as genai
 from bancodedados import create, books
 
 # Configuração da API Gemini
-API_KEY = 'SUA-CHAVE-API'
+API_KEY = 'AIzaSyClpWcO4647xmGt8nulbQFtGuBCnpg8O_A'
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
@@ -40,10 +41,11 @@ def add_book():
 
                 # Buscar URL da imagem do livro
                 book_img_url = get_book_image(book_name)
+                user_id = initialize.streamlit.session_state.id
 
                 # Inserir no banco de dados
                 book_user.insert_book(
-                    user_id=1,  # Exemplo: definir o ID do usuário como 1
+                    user_id = user_id,  # Exemplo: definir o ID do usuário como 1
                     book_title=book_name,
                     book_author=book_author_name,
                     book_genre=book_genero_name,
