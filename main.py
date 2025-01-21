@@ -2,7 +2,7 @@ import streamlit
 
 from src import initialize, pages
 
-API_KEY = 'AIzaSyClpWcO4647xmGt8nulbQFtGuBCnpg8O_A'
+API_KEY = 'SUA-CHAVE-API'
 
 # Inicializador de Variáveis do Usuário
 initialize.session_state()
