@@ -3,11 +3,17 @@ import requests
 import os
 from PIL import Image
 import google.generativeai as genai
+from bancodedados import books, users, create
 
 API_KEY = 'SUA-CHAVE-API'
 # Gemini
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-pro')
+
+# conectando com o banco de dados
+my_db = create.DataBase()
+book_user = books.BOOK(my_db)
+
 
 # Define o caminho absoluto para a pasta `img`
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,9 +31,22 @@ def resize(path: str, size=(360, 580)) -> str:
 def add_book() -> None:
     if streamlit.session_state.book_input:
         book_name = streamlit.text_input("Digite o nome do livro:")
+        book_assessment = streamlit.text_input("Digite sua avaliação: (0 à 5):")
         book_img = get_book(book_name)
         if streamlit.button("Enviar"):
             if book_name and book_img != None:
+                book_info = model.generate_content(
+                    f'Qual o nome do autor e o gênero do livro {book_name} (apenas o nome do autor ou autora e o gênero)'
+                )
+
+                if book_info and book_info.candidates:
+                    author = book_info.candidates[0].content.parts[0].text
+                    genero = book_info.candidates[0].content.parts[1].text
+                else:
+                    streamlit.error("Erro ao buscar informações do livro.")
+                    return
+
+                book_user.insert_book(book_name, author, genero, book_assessment) #(id_livro, titulo, autor_a, genero, avaliacao, user_id)   
                 streamlit.session_state.book_input = False
                 streamlit.success(f"Livro '{book_name}' Adicionado!")
                 streamlit.session_state.titles.append(book_name)
@@ -47,7 +66,7 @@ def show_books() -> None:
     # Garantir que as listas tenham o mesmo comprimento
     num_books = min(len(streamlit.session_state.books), len(streamlit.session_state.titles))
     
-    for i in range(num_books):
+    for i in range(num_books): 
         book = streamlit.session_state.books[i]
         name = streamlit.session_state.titles[i]
         

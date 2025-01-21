@@ -4,7 +4,7 @@ import os
 class DataBase:
     def __init__(self):
         # Define o caminho do banco de dados no diretório do usuário
-        db_path = os.path.expanduser("~/TesteReadmore.db")
+        db_path = os.path.expanduser("~/Teste2Readmore.db")
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
         self.cursor = self.conn.cursor()
         print(f"Conectado ao banco de dados em: {db_path}")
@@ -33,12 +33,13 @@ class DataBase:
                 author VARCHAR(100) NOT NULL,
                 genre VARCHAR(100) NOT NULL,
                 assessment INTEGER CHECK(assessment BETWEEN 0 AND 5),
+                url TEXT,
                 user_id INTEGER NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES Readmore_users (id),
                 UNIQUE(title, author, user_id)
             )
             """
-        ) #(id_livro, titulo, autor_a, genero, ano_publicacao, caminho_imagem, avaliacao, user_id)   
+        ) #(id_livro, titulo, autor_a, genero, avaliacao, url, user_id)   
         self.conn.commit()
 
     def close_conn(self):

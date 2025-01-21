@@ -2,6 +2,11 @@ class BOOK:
     def __init__(self, db):
             self.db = db
         
+    def get_all_books(self, user_id):
+        query = "SELECT title, url FROM Readmore_books WHERE user_id = ?"
+        self.db.cursor.execute(query, (user_id,))
+        books = self.db.cursor.fetchall()
+        return [{"title": book[0], "url": book[1]} for book in books]
 
     def search_book(self, book_title, user_id, book_id):
         query = "SELECT * FROM Readmore_books WHERE title = ? AND user_id = ? AND id = ?;"
@@ -13,30 +18,22 @@ class BOOK:
         else:
             print("Não encontrei este livro!!")
             return False
+        
 
-    def insert_book(self, user_id, book_title, book_author, book_genre, book_yearpublication, book_url, book_assessment):
+    def insert_book(self, user_id, book_title, book_author, book_genre, book_assessment, book_url):
         book_id = self.get_idbook(book_title, user_id)
         check = self.search_book(book_title, user_id, book_id)
         if not check:
             self.db.cursor.execute(
                 """
-                INSERT INTO Readmore_books (title, author, genre, year_publication, url, assessment, user_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?);
-                """, (book_title, book_author, book_genre, book_yearpublication, book_url, book_assessment, user_id)
+                INSERT INTO Readmore_books (title, author, genre, assessment, url, user_id)
+                VALUES (?, ?, ?, ?, ?, ?);
+                """, (book_title, book_author, book_genre, book_assessment, book_url, user_id)
             )
             self.db.conn.commit()
             print("livro inserido!")
-
-    def get_url(self, book_title, id_user):
-        query = "SELECT url FROM Readmore_books WHERE title = ? AND user_id = ?"
-        self.db.cursor.execute(query, (book_title, id_user))
-        book_url = self.db.cursor.fetchone()
-
-        if book_url:
-            return book_url[0]
         else:
-            return
-
+            return 0
 
     def get_idbook(self, book_title, user_id):
         query = "SELECT id FROM Readmore_books WHERE user_id = ? AND title = ?"
@@ -48,15 +45,6 @@ class BOOK:
         else:
             #print("Livro não encontrado!")
             return None
-
-    def update_url(self, book_id, id_user, new_url):
-        query = """
-                UPDATE Readmore_books SET url = ? WHERE id = ? AND user_id = ?;
-                """
-        self.db.cursor.execute(query, (new_url, book_id, id_user))
-        self.db.cursor.fetchone()
-        self.db.conn.commit()
-
 
     def delete_book(self, titulo_para_deletar, book_id, user_id):
         query = "DELETE FROM Readmore_books WHERE title = ? AND id = ? AND user_id = ?;"
