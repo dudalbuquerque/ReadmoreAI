@@ -71,11 +71,9 @@ def add_book():
             streamlit.rerun()
 
 
-import streamlit as st
-
 def show_book_details(book_name, book_img_url, book_author, book_genre, book_assessment):
     # Estilo personalizado para centralizar o conteúdo do expander
-    st.markdown(
+    streamlit.markdown(
         """
         <style>
         .expander-content {
@@ -91,33 +89,33 @@ def show_book_details(book_name, book_img_url, book_author, book_genre, book_ass
     )
 
     # Caixa expansível para mostrar os detalhes do livro
-    with st.expander(" ", expanded=True):
+    with streamlit.expander(" ", expanded=True):
         # Aplicando o estilo de centralização dentro do expander
-        st.markdown('<div class="expander-content">', unsafe_allow_html=True)
-        c1, c2, c3 = st.columns([1, 1, 1])
+        streamlit.markdown('<div class="expander-content">', unsafe_allow_html=True)
+        c1, c2, c3 = streamlit.columns([1, 1, 1])
         with c2:
-            st.image(book_img_url, width=200)
-            st.write(f"**Nome:** {book_name}")
-            st.write(f"**Autor:** {book_author}")
-            st.write(f"**Gênero:** {book_genre}")
-            st.write(f"**Avaliação:** {book_assessment} / 5")
+            streamlit.image(book_img_url, width=200)
+            streamlit.write(f"**Nome:** {book_name}")
+            streamlit.write(f"**Autor:** {book_author}")
+            streamlit.write(f"**Gênero:** {book_genre}")
+            streamlit.write(f"**Avaliação:** {book_assessment} / 5")
             
-            if st.button("Fechar", type="primary", use_container_width=True):
-                st.session_state.clicked_book = ''  # Limpa o estado do livro
-                st.rerun()  # Atualiza a interface
-            st.markdown('</div>', unsafe_allow_html=True)
+            if streamlit.button("Fechar", type="primary", use_container_width=True):
+                streamlit.session_state.clicked_book = ''  # Limpa o estado do livro
+                streamlit.rerun()  # Atualiza a interface
+            streamlit.markdown('</div>', unsafe_allow_html=True)
 
 
 def show_books():
-    st.markdown("## Meus Livros")
-    c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1, 1])
+    streamlit.markdown("## Meus Livros")
+    c1, c2, c3, c4, c5 = streamlit.columns([1, 1, 1, 1, 1])
 
-    books_data = book_user.return_info(st.session_state.id)
+    books_data = book_user.return_info(streamlit.session_state.id)
     columns = [c1, c2, c3, c4, c5]
 
     # Exibe os detalhes do livro, caso um livro esteja selecionado
-    if st.session_state.clicked_book != '':
-        book = st.session_state.clicked_book
+    if initialize.streamlit.session_state.clicked_book != '':
+        book = streamlit.session_state.clicked_book
         show_book_details(
             book_name=book[0],
             book_img_url=book[4],
@@ -135,11 +133,11 @@ def show_books():
             column = columns[i % 5]
 
             with column:
-                st.image(book_img_url, use_container_width=True)
+                streamlit.image(book_img_url, use_container_width=True)
                 # Botão para abrir o modal do livro clicado
-                if st.button(f"{book_name}", key=f"book_{i}"):
-                    st.session_state.clicked_book = book
-                    st.rerun()  # Atualiza a interface
+                if streamlit.button(f"{book_name}", key=f"book_{i}"):
+                    streamlit.session_state.clicked_book = book
+                    streamlit.rerun()  # Atualiza a interface
 
 
 
