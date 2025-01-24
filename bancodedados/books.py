@@ -55,3 +55,9 @@ class BOOK:
             print("Livro deletado com sucesso!!")
         else:
             print("Erro ao deletar")
+
+    def return_info(self, user_id):
+        query = "SELECT title, author, genre, assessment, url FROM Readmore_books WHERE user_id = ?;"
+        self.db.cursor.execute(query, (user_id,))
+        books = self.db.cursor.fetchall()
+        return books

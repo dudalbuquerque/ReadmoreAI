@@ -3,7 +3,9 @@ import streamlit
 def session_state():
     if "page" not in streamlit.session_state:
         streamlit.session_state.page = "Login"
-    
+    if "clicked_book" not in streamlit.session_state:
+        print('fechando')
+        streamlit.session_state.clicked_book = ''
     if "username" not in streamlit.session_state:
         streamlit.session_state.username = ''
     if "id" not in streamlit.session_state:
