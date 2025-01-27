@@ -1,5 +1,5 @@
 import streamlit
-from src import books2
+from src import books
 from bancodedados import users, create
 
 # conectando com o banco de dados
@@ -118,6 +118,6 @@ def cadastro():
                 streamlit.rerun()
 
 def main():
-    books2.show_books()
-    books2.add_book()
-    books2.suggest_books()
+    books.show_books()
+    books.add_book()
+    books.suggest_books()
