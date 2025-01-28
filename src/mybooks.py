@@ -13,7 +13,7 @@ import google.generativeai as genai
 from bancodedados import create, books
 
 # Configuração da API Gemini
-API_KEY = 'AIzaSyDuLwMbjOhECPfvXYtK4aG8bDAYHKpYiLE'
+API_KEY = 'SUA-CHAVE-API'
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
