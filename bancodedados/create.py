@@ -4,7 +4,7 @@ import os
 class DataBase:
     def __init__(self):
         # Define o caminho do banco de dados no diretório do usuário
-        db_path = os.path.expanduser("~/Teste2Readmore.db")
+        db_path = os.path.expanduser("~/Teste0Readmore.db")
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
         self.cursor = self.conn.cursor()
         print(f"Conectado ao banco de dados em: {db_path}")
@@ -30,10 +30,11 @@ class DataBase:
             CREATE TABLE IF NOT EXISTS Readmore_books(
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 title VARCHAR(100) NOT NULL,
-                author VARCHAR(100) NOT NULL,
-                genre VARCHAR(100) NOT NULL,
+                author VARCHAR(100),
+                genre VARCHAR(100),
                 assessment INTEGER CHECK(assessment BETWEEN 0 AND 5),
                 url TEXT,
+                read BOOLEAN NOT NULL,  
                 user_id INTEGER NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES Readmore_users (id),
                 UNIQUE(title, author, user_id)

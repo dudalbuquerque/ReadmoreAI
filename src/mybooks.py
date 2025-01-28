@@ -13,7 +13,7 @@ import google.generativeai as genai
 from bancodedados import create, books
 
 # Configuração da API Gemini
-API_KEY = 'SUA-CHAVE-API'
+API_KEY = 'AIzaSyDuLwMbjOhECPfvXYtK4aG8bDAYHKpYiLE'
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
@@ -44,7 +44,6 @@ def add_book():
                 ] 
                 
                 book_genero_prompt = model.generate_content(f"Informe o gênero ou os gêneros do livro '{book_name}' com base na lista {generos_literarios}. Retorne apenas o nome do gênero ou os gêneros, separados por vírgulas.")
-                print(book_genero_prompt)
                 
                 # Verificar se a resposta tem o atributo 'generated_text'
                 if hasattr(book_genero_prompt, 'candidates') and len(book_genero_prompt.candidates) > 0:
@@ -65,7 +64,8 @@ def add_book():
                     book_author=book_author_name,
                     book_genre=book_genero_name,
                     book_assessment=book_assessment,
-                    book_url=book_img_url
+                    book_url=book_img_url,
+                    book_read = 1
                 )# user_id, book_title, book_author, book_genre, book_assessment, book_url)
                 streamlit.success(f"Livro '{book_name}' adicionado!")
                 streamlit.session_state.book_input = False
@@ -77,8 +77,7 @@ def add_book():
             streamlit.session_state.book_input = True
             streamlit.rerun()
 
-
-def show_book_details(book_name, book_img_url, book_author, book_genre, book_assessment):
+def display_book_details(book_name, book_img_url, book_author, book_genre, book_assessment):
     # Estilo personalizado para centralizar o conteúdo do expander
     streamlit.markdown(
         """
@@ -96,12 +95,15 @@ def show_book_details(book_name, book_img_url, book_author, book_genre, book_ass
     )
 
     # Caixa expansível para mostrar os detalhes do livro
-    with streamlit.expander(" ", expanded=True):
+    with streamlit.expander("Detalhes do Livro", expanded=True):
         # Aplicando o estilo de centralização dentro do expander
         streamlit.markdown('<div class="expander-content">', unsafe_allow_html=True)
-        c1, c2, c3 = streamlit.columns([1, 1, 1])
-        with c2:
+        c1, c2 = streamlit.columns([1, 2])
+        with c1:
             streamlit.image(book_img_url, width=200)
+
+        with c2:
+            streamlit.write(" ")
             streamlit.write(f"**Nome:** {book_name}")
             streamlit.write(f"**Autor:** {book_author}")
             streamlit.write(f"**Gênero:** {book_genre}")
@@ -112,18 +114,18 @@ def show_book_details(book_name, book_img_url, book_author, book_genre, book_ass
                 streamlit.rerun()  # Atualiza a interface
             streamlit.markdown('</div>', unsafe_allow_html=True)
 
-
 def show_books():
     streamlit.markdown("## Meus Livros")
     c1, c2, c3, c4, c5 = streamlit.columns([1, 1, 1, 1, 1])
 
-    books_data = book_user.return_info(streamlit.session_state.id)
+    books_data = book_user.return_info(streamlit.session_state.id, 1)
+    print(books_data)
     columns = [c1, c2, c3, c4, c5]
 
     # Exibe os detalhes do livro, caso um livro esteja selecionado
     if initialize.streamlit.session_state.clicked_book != '':
         book = streamlit.session_state.clicked_book
-        show_book_details(
+        display_book_details(
             book_name=book[0],
             book_img_url=book[4],
             book_author=book[1],
@@ -146,38 +148,39 @@ def show_books():
                     streamlit.session_state.clicked_book = book
                     streamlit.rerun()  # Atualiza a interface
 
-
-
-def suggest_books():
-    streamlit.markdown("## Livros Sugeridos")
-    if streamlit.button("Sugerir Livros", use_container_width=True, type="primary"):
-        gen_book()
-
-    c1, c2, c3, c4, c5 = streamlit.columns([1, 1, 1, 1, 1])
-
-    for i, (book_name, book_img_url) in enumerate(
-        zip(streamlit.session_state.get("nomes_sugeridos", []), streamlit.session_state.get("sugeridos", []))
-    ):
-        if i % 5 == 0:
-            with c1:
-                streamlit.image(book_img_url, use_column_width=True)
-                streamlit.write(book_name)
-        elif i % 5 == 1:
-            with c2:
-                streamlit.image(book_img_url, use_column_width=True)
-                streamlit.write(book_name)
-        elif i % 5 == 2:
-            with c3:
-                streamlit.image(book_img_url, use_column_width=True)
-        elif i % 5 == 3:
-            with c4:
-                streamlit.image(book_img_url, use_column_width=True)
-                streamlit.write(book_name)
-        elif i % 5 == 4:
-            with c5:
-                streamlit.image(book_img_url, use_column_width=True)
-                streamlit.write(book_name)
-
+def display_books_suggested_details(book):
+    streamlit.markdown(
+        """
+        <style>
+        .expander-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+    with streamlit.expander("Detalhes do Livro", expanded=True):
+        # Aplicando o estilo de centralização dentro do expander
+        streamlit.markdown('<div class="expander-content">', unsafe_allow_html=True)
+        c1, c2 = streamlit.columns([1, 2])
+        with c1:
+            book_img_url = get_book_image(book[0]) 
+            streamlit.image(book_img_url, width=200)
+        with c2:
+            streamlit.write(" ")
+            streamlit.write(" ")
+            streamlit.write(f"**Nome:** {book[0]}")
+            streamlit.write(f"**Autor:** {book[1]}")
+            streamlit.write(f"**Sinopse:** {book[2]}")
+            if streamlit.button("Fechar", type="primary", use_container_width=True):
+                streamlit.session_state.clicked_book = ''  # Limpa o estado do livro
+                streamlit.rerun()  # Atualiza a interface
+            streamlit.markdown('</div>', unsafe_allow_html=True)
+        
 def get_book_image(book_name):
     api_url = "https://www.googleapis.com/books/v1/volumes"
     params = {"q": book_name}
@@ -188,15 +191,3 @@ def get_book_image(book_name):
             image_url = data["items"][0]["volumeInfo"].get("imageLinks", {}).get("thumbnail")
             return image_url
     return None
-
-def gen_book():
-    ai = model.generate_content(
-        f"Gere uma sugestão de livro (apenas o nome do livro e do autor) com base nestes livros já lidos: {str(streamlit.session_state.get('titles', []))}"
-    )
-    book_name = ai.candidates[0].content.parts[0].text
-    book_img_url = get_book_image(book_name)
-
-    if book_name and book_img_url:
-        streamlit.session_state.nomes_sugeridos.append(book_name)
-        streamlit.session_state.sugeridos.append(book_img_url)
-        streamlit.experimental_rerun()

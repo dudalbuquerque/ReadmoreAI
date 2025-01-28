@@ -20,20 +20,32 @@ class BOOK:
             return False
         
 
-    def insert_book(self, user_id, book_title, book_author, book_genre, book_assessment, book_url):
+    def insert_book(self, user_id, book_title, book_author, book_genre, book_assessment, book_url, book_read):
         book_id = self.get_idbook(book_title, user_id)
         check = self.search_book(book_title, user_id, book_id)
         if not check:
             self.db.cursor.execute(
                 """
-                INSERT INTO Readmore_books (title, author, genre, assessment, url, user_id)
-                VALUES (?, ?, ?, ?, ?, ?);
-                """, (book_title, book_author, book_genre, book_assessment, book_url, user_id)
+                INSERT INTO Readmore_books (title, author, genre, assessment, url, read, user_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?);
+                """, (book_title, book_author, book_genre, book_assessment, book_url, book_read, user_id)
             )
             self.db.conn.commit()
             print("livro inserido!")
         else:
             return 0
+    
+    def return_condition_book(self, user_id, book_title):
+        query = "SELECT read FROM Readmore_books WHERE user_id = ? AND title = ?"
+        self.db.cursor.execute(query, (user_id, book_title))
+        condition_book = self.db.cursor.fetchone()
+
+        if condition_book and condition_book[0] == "True":
+            return True
+        else:
+            return False
+
+
 
     def get_idbook(self, book_title, user_id):
         query = "SELECT id FROM Readmore_books WHERE user_id = ? AND title = ?"
@@ -56,8 +68,19 @@ class BOOK:
         else:
             print("Erro ao deletar")
 
-    def return_info(self, user_id):
-        query = "SELECT title, author, genre, assessment, url FROM Readmore_books WHERE user_id = ?;"
-        self.db.cursor.execute(query, (user_id,))
+    def return_info(self, user_id, book_read):
+        query = "SELECT title, author, genre, assessment, url, read read FROM Readmore_books WHERE user_id = ? AND read = ?;"
+        self.db.cursor.execute(query, (user_id, book_read))
         books = self.db.cursor.fetchall()
         return books
+
+    def books_list(self, user_id, book_genre):
+        if(book_genre == ''):
+            query = "SELECT title, assessment FROM Readmore_books WHERE user_id = ?;"
+            self.db.cursor.execute(query, (user_id, ))
+        else:
+            query = "SELECT title, assessment FROM Readmore_books WHERE user_id = ? AND genre = ?;"
+            self.db.cursor.execute(query, (user_id, book_genre))
+        books = self.db.cursor.fetchall()
+        return books
+    
