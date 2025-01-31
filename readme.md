@@ -53,7 +53,19 @@ Antes de executar o projeto, é necessário configurar o banco de dados. Execute
 python db/create.py
 ```
 
-### 5. Executar o Projeto
+### 5. Configurar Chave API
+
+Por último, é necessário adicionar sua chave de API nos arquivos `mybooks.py` e `suggest.py`, dentro da pasta `src`.
+
+Em cada um desses arquivos, encontre a seguinte linha:
+
+```python
+genai.configure(api_key='-')
+```
+
+Substitua `'-'` pela sua chave de API válida.
+
+### 6. Executar o Projeto
 
 Agora que tudo está configurado, você pode executar o projeto. Utilize o seguinte comando para iniciar o servidor do **Streamlit**:
 
