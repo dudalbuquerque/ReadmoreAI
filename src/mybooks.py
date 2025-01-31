@@ -2,19 +2,13 @@ import sys
 import os
 import streamlit
 import requests
-
-# Adiciona o diretório raiz ao sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-# Agora você pode importar corretamente o módulo "initialize" de src
 from src import initialize
 
 import google.generativeai as genai
-from bancodedados import create, books
+from db import create, books
 
-# Configuração da API Gemini
-API_KEY = 'SUA-CHAVE-API'
-genai.configure(api_key=API_KEY)
+genai.configure(api_key='-')
 model = genai.GenerativeModel('gemini-pro')
 
 # Conexão com o banco de dados

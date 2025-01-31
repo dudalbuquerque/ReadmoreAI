@@ -1,6 +1,6 @@
 import streamlit
 from src import principal
-from bancodedados import users, create
+from db import users, create
 
 # conectando com o banco de dados
 my_db = create.DataBase()
