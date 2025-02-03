@@ -1,6 +1,6 @@
 import streamlit
-from src import principal
 from db import users, create
+from src import principal
 
 # conectando com o banco de dados
 my_db = create.DataBase()
@@ -14,11 +14,7 @@ def login():
     
     # Campo para o nome de usuário
     username = streamlit.text_input("Nome de Usuário", placeholder="Digite seu nome")
-    id_user = user.get_id(username) 
-
-    # Mensagem se o usuário não existe
-    if not id_user and username:
-        streamlit.warning("Este usuário não existe.")
+    id_user = user.get_id(username)
 
     # Campo para a senha
     password = streamlit.text_input("Senha", type="password", placeholder="Digite sua senha")
@@ -37,6 +33,7 @@ def login():
 
     with c1:
         if streamlit.button("Entrar", type="primary", use_container_width=True):
+            c1 = streamlit.columns([1])
             # Verificar se os campos foram preenchidos
             if not username or not password:
                 streamlit.error("Por favor, preencha todos os campos.")
@@ -81,7 +78,7 @@ def cadastro():
 
     # Mostrar mensagem se o nome de usuário já existe
     if id_user:
-        streamlit.warning("Nome de usuário já existe. Por favor, escolha outro.")
+        streamlit.warning("Ops, este não pode, escolha outro!")
 
 
     # Entradas adicionais
