@@ -9,6 +9,8 @@ def session_state():
         streamlit.session_state.clicked_book_suggest = ''
     if "clicked_add" not in streamlit.session_state:
         streamlit.session_state.clicked_add = ''
+    if "menu_expanded" not in streamlit.session_state:
+        streamlit.session_state.menu_expanded = True
     if "username" not in streamlit.session_state:
         streamlit.session_state.username = ''
     if "id" not in streamlit.session_state:
