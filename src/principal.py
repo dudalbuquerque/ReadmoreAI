@@ -1,5 +1,6 @@
 import streamlit
-from src import mybooks, suggested, sidebar, searchbook
+from src import suggested
+from src import mybooks, sidebar, searchbook
 
 
 def main():
