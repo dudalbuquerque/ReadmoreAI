@@ -8,7 +8,7 @@ from src import initialize
 import google.generativeai as genai
 from db import create, books
 
-genai.configure(api_key='-')
+genai.configure(api_key= '-')
 model = genai.GenerativeModel('gemini-pro')
 
 # Conexão com o banco de dados
@@ -18,7 +18,10 @@ book_user = books.BOOK(my_db)
 def add_book():
     if streamlit.session_state.get("book_input", False):
         book_name = streamlit.text_input("Digite o nome do livro:")
-        book_assessment = streamlit.text_input("Digite sua avaliação: (0 à 5):")
+        _, c2, _= streamlit.columns([1, 1, 1])
+        with c2:
+            book_assessment = streamlit.slider("Qual a nota do livro:", 0.0, 5.0, 2.5, format="%.1f")
+            streamlit.write(f"Valor do slider: {book_assessment:.1f}")
         if streamlit.button("Enviar"):
             if book_name:
                 # Obter informações do livro usando a API
@@ -113,7 +116,6 @@ def show_books():
     c1, c2, c3, c4, c5 = streamlit.columns([1, 1, 1, 1, 1])
 
     books_data = book_user.return_info(streamlit.session_state.id, 1)
-    print(books_data)
     columns = [c1, c2, c3, c4, c5]
 
     # Exibe os detalhes do livro, caso um livro esteja selecionado
