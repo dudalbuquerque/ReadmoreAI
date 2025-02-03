@@ -1,11 +1,11 @@
 import streamlit
-from src import initialize, pages
+from src import initialize, main_pages
 
 # Inicializador de Variáveis do Usuário
 initialize.session_state()
 if streamlit.session_state.page == "Login":
-    pages.login()
+    main_pages.login()
 elif streamlit.session_state.page == "Cadastro":
-    pages.cadastro()
+    main_pages.cadastro()
 elif streamlit.session_state.page == "Main":
-    pages.main()
+    main_pages.main()
