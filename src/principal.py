@@ -1,5 +1,5 @@
 import streamlit
-from src import mybooks, suggested, teste, searchbook
+from src import mybooks, suggested, sidebar, searchbook
 
 
 def main():
@@ -7,7 +7,7 @@ def main():
     streamlit.session_state.menu_expanded = True
 
     # Exibe diretamente o menu
-    teste.menu_expanded()
+    sidebar.menu_expanded()
 
     tabs = streamlit.tabs(["Meus Livros", "Lista de livros sugeridos", "Buscar Livros"])
     
