@@ -11,6 +11,8 @@ def session_state():
         streamlit.session_state.clicked_add = ''
     if "menu_expanded" not in streamlit.session_state:
         streamlit.session_state.menu_expanded = True
+    if "validation" not in streamlit.session_state:
+        streamlit.session_state.validation = ''    
     if "username" not in streamlit.session_state:
         streamlit.session_state.username = ''
     if "id" not in streamlit.session_state:

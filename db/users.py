@@ -41,9 +41,19 @@ class USER:
         else:
             print("Usuário não encontrado!")
             return None      
-    """
-    def esqueceu_senha(self, user_id, new_password):
+        
+    def check_id(self, user_name, user_email, user_date_of_birth):
+        query = "SELECT id FROM Readmore_users WHERE name = ? AND date_of_birth = ? AND email = ?"
+        self.db.cursor.execute(query, (user_name, user_date_of_birth, user_email))
+        id = self.db.cursor.fetchone()
+        if id:
+            return user_email
+        else:
+            return None     
+
+    def update_password(self, user_name, new_password):
+        user_id = self.get_id(user_name)
         query = "UPDATE Readmore_users SET senha = ? WHERE id = ? ;"
         self.db.cursor.execute(query, (new_password, user_id))
         self.db.conexao.commit()   
-    """
+    

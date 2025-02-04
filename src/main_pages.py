@@ -1,6 +1,6 @@
 import streamlit
 from db import users, create
-from src import principal
+from src import principal, update_password
 
 # conectando com o banco de dados
 my_db = create.DataBase()
@@ -16,9 +16,16 @@ def login():
     username = streamlit.text_input("Nome de Usuário", placeholder="Digite seu nome")
     id_user = user.get_id(username)
 
-    # Campo para a senha
-    password = streamlit.text_input("Senha", type="password", placeholder="Digite sua senha")
-
+    left, right = streamlit.columns([3, 1])
+    with left:
+        # Campo para a senha
+        password = streamlit.text_input("Senha", type="password", placeholder="Digite sua senha")
+    with right:
+        streamlit.write(" ")
+        streamlit.write("")
+        if streamlit.button("Esqueci a senha", type="tertiary"):
+            streamlit.session_state.page = "Forget password"
+            streamlit.rerun()
     # Inicializar tentativas na sessão
     if "login_attempts" not in streamlit.session_state:
         streamlit.session_state.login_attempts = 0
@@ -116,3 +123,5 @@ def cadastro():
 
 def main():
     principal.main()
+def update_pass():
+    update_password.update_password()

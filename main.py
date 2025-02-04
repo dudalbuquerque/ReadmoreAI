@@ -7,5 +7,7 @@ if streamlit.session_state.page == "Login":
     main_pages.login()
 elif streamlit.session_state.page == "Cadastro":
     main_pages.cadastro()
+elif streamlit.session_state.page == "Forget password":
+    main_pages.update_pass()
 elif streamlit.session_state.page == "Main":
     main_pages.main()
