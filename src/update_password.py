@@ -9,9 +9,9 @@ def update_password():
     streamlit.title("Forget PassWord")
 
     if initialize.streamlit.session_state.validation == '':
-        username = streamlit.text_input("Nome de usuário", "Digite nome usuário")
-        email = streamlit.text_input("Qual o email cadastrado?", "Digite seu email")
-        check_email = streamlit.text_input("Confirme seu email", "Digite novamente seu email")
+        username = streamlit.text_input("Nome de usuário", placeholder="Digite nome usuário")
+        email = streamlit.text_input("Qual o email cadastrado?", placeholder= "Digite seu email")
+        check_email = streamlit.text_input("Confirme seu email", placeholder= "Digite novamente seu email")
         date_of_birth = streamlit.date_input("Qual sua data de nascimento?", value=None)
 
         streamlit.write("")  # Outro espaço

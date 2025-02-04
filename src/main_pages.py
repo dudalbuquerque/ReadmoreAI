@@ -16,16 +16,20 @@ def login():
     username = streamlit.text_input("Nome de Usuário", placeholder="Digite seu nome")
     id_user = user.get_id(username)
 
-    left, right = streamlit.columns([3, 1])
+    # Campo para a senha
+    password = streamlit.text_input("Senha", type="password", placeholder="Digite sua senha")
+
+    left, midle, right= streamlit.columns([1, 1, 1])
     with left:
-        # Campo para a senha
-        password = streamlit.text_input("Senha", type="password", placeholder="Digite sua senha")
-    with right:
-        streamlit.write(" ")
-        streamlit.write("")
         if streamlit.button("Esqueci a senha", type="tertiary"):
             streamlit.session_state.page = "Forget password"
             streamlit.rerun()
+    with midle:
+            streamlit.write(" ")
+            streamlit.write("")
+    with right:
+            streamlit.write(" ")
+            streamlit.write("")            
     # Inicializar tentativas na sessão
     if "login_attempts" not in streamlit.session_state:
         streamlit.session_state.login_attempts = 0
@@ -39,6 +43,7 @@ def login():
     c1, _, c3 = streamlit.columns([1, 1, 1])
 
     with c1:
+        streamlit.write("")
         if streamlit.button("Entrar", type="primary", use_container_width=True):
             c1 = streamlit.columns([1])
             # Verificar se os campos foram preenchidos
@@ -62,6 +67,7 @@ def login():
                 streamlit.session_state.incorrect_password = True
 
     with c3:
+        streamlit.write("")
         if streamlit.button("Cadastrar-se", use_container_width=True):
             # Redirecionar para a página de cadastro
             streamlit.session_state.page = "Cadastro"
