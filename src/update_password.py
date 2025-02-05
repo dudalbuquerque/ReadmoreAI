@@ -1,6 +1,12 @@
 import streamlit
 from db import users, create
 from src import initialize
+from datetime import datetime, timedelta
+
+# Definir o intervalo de anos
+ano_atual = datetime.today().year
+ano_minimo = ano_atual - 105
+ano_maximo = ano_atual - 18 
 
 my_db = create.DataBase()
 user = users.USER(my_db)
@@ -12,7 +18,8 @@ def update_password():
         username = streamlit.text_input("Nome de usuário", placeholder="Digite nome usuário")
         email = streamlit.text_input("Qual o email cadastrado?", placeholder= "Digite seu email")
         check_email = streamlit.text_input("Confirme seu email", placeholder= "Digite novamente seu email")
-        date_of_birth = streamlit.date_input("Qual sua data de nascimento?", value=None)
+        date_of_birth = streamlit.date_input("Qual sua data de nascimento?", value=None, format="DD/MM/YYYY", min_value=datetime(ano_minimo, 1, 1), max_value=datetime(ano_maximo, 12, 31))
+
 
         streamlit.write("")  # Outro espaço
 

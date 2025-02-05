@@ -1,2 +1,1 @@
-streamlit.session_state.page = "Forget password"
-            streamlit.rerun()
+placeholder="Digite sua data de nascimento",
