@@ -4,7 +4,7 @@ from src import mybooks, initialize, suggested
 from db import create, books
 
 # Configuração da API do Google Generative AI
-genai.configure(api_key='AIzaSyAoT3kLUW4JaC9bmCBI1xMT4YL6n2uUrMw')
+genai.configure(api_key='-')
 model = genai.GenerativeModel('gemini-pro')
 
 # Conexão com o banco de dados
