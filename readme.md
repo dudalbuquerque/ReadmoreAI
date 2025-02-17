@@ -2,6 +2,9 @@
 
 Bem-vindo ao repositório do projeto **ReadmoreAi**! Este projeto tem como objetivo gerar sugestões personalizadas de livros com base nas preferências do usuário, utilizando técnicas de processamento de linguagem natural e análise de dados. Abaixo, você encontrará os passos necessários para configurar e executar o projeto em sua máquina local.
 
+## Tecnologias Utilizadas:
+Python e Streamlit
+
 ## Pré-requisitos
 
 Antes de começar, certifique-se de que você possui os seguintes requisitos instalados:
@@ -105,12 +108,42 @@ ReadmoreAi/
 └── readme.md             # Este arquivo
 ```
 
+## Como utilizar o Projeto
+
+Após seguir os passos de configuração e execução descritos acima, você pode interagir com o **ReadmoreAi** diretamente pela interface web gerada pelo **Streamlit**.
+
+
+### Funcionalidades Principais:
+1. **Cadastro de Usuários:** Ao acessar a interface, você será solicitado a criar uma conta. Isso permite que o sistema personalize as recomendações de livros de acordo com as suas preferências.
+   
+2. **Recomendações Personalizadas:** O sistema sugere livros com base nas preferências do usuário e no histórico de interações. As sugestões são atualizadas conforme o usuário interage com o sistema.
+   
+3. **Visualização de Livros:** Você pode ver uma lista de livros recomendados, com detalhes como título, autor e sinopse.
+
+4. **Busca por Livros:** A interface também oferece uma funcionalidade de busca, onde o usuário pode pesquisar por livros específicos.
+
+5. **Atualização do Banco de Dados:** A cada interação com a plataforma, o banco de dados é atualizado com informações sobre os livros mais acessados e as preferências dos usuários.
+
+
+## Imagens do Projeto
+
+A pasta **img/** contém imagens relacionadas ao projeto.
+
+
+## Status do Projeto
+
+Atualmente, o projeto está 95% concluído. A única tarefa pendente é a organização dos códigos nos arquivos Python. Isso inclui melhorias no código para facilitar a manutenção e melhorar a legibilidade.
+
+## Diretrizes de Contribuição
+
+Agradecemos pelo seu interesse em contribuir para o projeto **ReadmoreAi**! No entanto, como este é um trabalho acadêmico, **não aceitamos contribuições diretas**. Pedimos que, caso tenha sugestões ou queira colaborar de alguma forma, entre em contato com os responsáveis pelo projeto para discutir possíveis formas de colaboração dentro das diretrizes acadêmicas.
+
 ## Integrantes do Projeto
 
 Este projeto foi desenvolvido por:
 
-- Adriana Melcop
-- Eduarda Albuquerque
-- Getulio Junqueira
-- Marcela Raposo
-- Thawan Silva
+- Adriana Melcop | atmc@cin.ufpe.br
+- Eduarda Albuquerque | evas@cin.ufpe.br
+- Getulio Junqueira | gjql@cin.ufpe.br
+- Marcela Raposo | mpr@cin.ufpe.br
+- Thawan Silva | trs3@cin.ufpe.br
