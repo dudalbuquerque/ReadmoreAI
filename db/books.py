@@ -13,10 +13,10 @@ class BOOK:
         self.db.cursor.execute(query, (book_title, user_id, book_id))
         book = self.db.cursor.fetchone()
         if book:
-            print(f"O livro '{book_title}' está na base de dados.")
+            #print(f"O livro '{book_title}' está na base de dados.")
             return True
         else:
-            print("Não encontrei este livro!!")
+            #print("Não encontrei este livro!!")
             return False
         
 
@@ -31,7 +31,7 @@ class BOOK:
                 """, (book_title, book_author, book_genre, book_assessment, book_url, book_read, user_id)
             )
             self.db.conn.commit()
-            print("livro inserido!")
+            #print("livro inserido!")
         else:
             return 0
     

@@ -47,7 +47,7 @@ def display_books_suggested_details(book):
             streamlit.write(f"**Autor:** {book[1]}")
             streamlit.write(f"**Sinopse:** {book[2]}")
             if streamlit.button("Fechar", type="primary", use_container_width=True):
-                streamlit.session_state.clicked_book_suggested = ''  # Limpa o estado do livro
+                streamlit.session_state.clicked_book_suggest = ''  # Limpa o estado do livro
                 streamlit.rerun()  # Atualiza a interface
         streamlit.markdown('</div>', unsafe_allow_html=True)
 
@@ -69,7 +69,7 @@ def show_books_suggested():
             streamlit.image(book_img_url, use_container_width=True)
             # Botão para abrir o modal do livro clicado
             if streamlit.button(f"{book_name}", use_container_width=True):
-                streamlit.session_state.clicked_book_sugerido = book
+                streamlit.session_state.clicked_book_suggest = book
                 streamlit.rerun()  # Atualiza a interface
 
 def add_db_book_suggested(book):

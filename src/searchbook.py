@@ -58,50 +58,77 @@ def display_book_suggested(book):
                     initialize.streamlit.session_state.clicked_add = ''
                     streamlit.rerun()
 
-def gen_book(genre):
-    """
-    Gera uma sugestão de livro com base no gênero fornecido e na lista de livros do usuário.
-    """
-    generos_literarios = [
-        "Romance", "Conto", "Fantasia", "Ficção Científica", "Terror/Horror", 
-        "Policial/Detetivesco", "Aventura", "Distopia/Utopia", "Romance Histórico", 
-        "Biografia", "Autobiografia", "Diário/Cartas", "Poesia", "Tragédia", 
-        "Comédia", "Drama", "Fábula", "Lenda", "Crônica", "Suspense/Thriller", "Mistério"
-    ]
-    
-    suggested = None
-    
-    if genre:
-        # Valida o gênero fornecido
-        genre = model.generate_content(
-            f"Retorne o gênero da lista de {generos_literarios}, que é mais parecido com {genre}. Retorne apenas o gênero"
-        ).text.strip()
-        
-        book_list = book_user.books_list(streamlit.session_state.id, genre)
-
-        if book_list:
-            suggested = model.generate_content(
-                f"Gere uma sugestão de livro com base na lista de nomes e notas: {book_list}, não repita o que tem na lista. "
-                f"Liste da seguinte forma: Nome do Livro - Nome do Autor - Sinopse do Livro. "
-                f"Não inclua caracteres especiais."
-            ).text.strip()
-
-    if not genre or (not book_list and not suggested):
-        book_list = book_user.books_list(streamlit.session_state.id, "")
+def gen_book(none, author, genre, title):
+    book_list = book_user.books_list(streamlit.session_state.id, genre)
+    if none:
         if not book_list:
             suggested = model.generate_content(
-                f"Gere uma sugestão de livro com base no gênero {genre} e na lista de nomes e notas: {book_list}, não repita o que tem na lista. "
-                f"Liste da seguinte forma: Nome do Livro - Nome do Autor - Sinopse do Livro. "
-                f"Não inclua caracteres especiais."
+                """
+                Sugira apenas um livro interessante para leitura. 
+                Liste da seguinte forma, sem destaques ou formatação especial: Nome do Livro - Nome do Autor - Sinopse do Livro. 
+                A sinopse deve ser envolvente e descrever a história sem revelar spoilers importantes. 
+                Não inclua caracteres especiais.
+                """
             ).text.strip()
         else:
             suggested = model.generate_content(
-                f"Gere uma sugestão de livro com base na lista de nomes e notas: {book_list}, não repita o que tem na lista. "
-                f"Liste da seguinte forma: Nome do Livro - Nome do Autor - Sinopse do Livro. "
-                f"Não inclua caracteres especiais."
+                f"""
+                Sugira apenas um livro que não esteja na lista de nomes e notas: {book_list}. 
+                Liste no seguinte formato, sem destaques ou formatação especial: Nome do Livro - Nome do Autor - Sinopse do Livro. 
+                A sinopse deve ser clara e envolvente, sem revelar spoilers importantes. 
+                Não utilize caracteres especiais.
+                """
             ).text.strip()
+    elif author:
+        if not book_list:
+            suggested = model.generate_content(
+                f"""
+                Sugira apenas um livro escrito por {author}. 
+                Liste no seguinte formato, sem destaques ou formatação especial: Nome do Livro - Nome do Autor - Sinopse do Livro. 
+                A sinopse deve ser clara e envolvente, sem revelar spoilers importantes. 
+                Não utilize caracteres especiais.
+                """
+            ).text.strip()
+        else:
+            suggested = model.generate_content(
+                f"""
+                Sugira apenas um livro escrito por {author} que não esteja na lista de nomes e notas: {book_list}. 
+                Liste no seguinte formato, sem destaques ou formatação especial: Nome do Livro - Nome do Autor - Sinopse do Livro. 
+                A sinopse deve ser clara e envolvente, sem revelar spoilers importantes. 
+                Não utilize caracteres especiais.
+                """
+            ).text.strip()
+    elif genre:
+        if not book_list:
+            suggested = model.generate_content(
+                f"""
+                Sugira apenas m livro do gênero {genre}. 
+                Liste no seguinte formato, sem destaques ou formatação especial: Nome do Livro - Nome do Autor - Sinopse do Livro. 
+                A sinopse deve ser clara e envolvente, sem revelar spoilers importantes. 
+                Não utilize caracteres especiais.
+                """
+            ).text.strip()
+        else:
+            suggested = model.generate_content(
+                f"""
+                Sugira apenas um livro do gênero {genre} que não esteja na lista de nomes e notas: {book_list}. 
+                Liste no seguinte formato, sem destaques ou formatação especial: Nome do Livro - Nome do Autor - Sinopse do Livro. 
+                A sinopse deve ser clara e envolvente, sem revelar spoilers importantes. 
+                Não utilize caracteres especiais.
+                """
+            ).text.strip()        
+    elif title:
+        suggested = model.generate_content(
+            f"""
+            Sugira apenas um livro que não esteja na lista de nomes e notas: {book_list} e que tenha um título semelhante ou igual a {title}. 
+            Liste no seguinte formato, sem destaques ou formatação especial: Nome do Livro - Nome do Autor - Sinopse do Livro. 
+            A sinopse deve ser clara e envolvente, sem revelar spoilers importantes. 
+            Não utilize caracteres especiais.
+            """
+        ).text.strip()
         
     suggested = suggested.split(" - ")
+    print(suggested)
     initialize.streamlit.session_state.clicked_book_suggest = suggested
     streamlit.rerun()
 
@@ -110,6 +137,7 @@ def suggest_books():
     Interface principal para sugerir livros com base no gênero informado pelo usuário.
     """
     streamlit.markdown("## Buscar Livros")
+
 
     # Exibe livro sugerido se houver um salvo na sessão
     if initialize.streamlit.session_state.clicked_book_suggest:
@@ -121,9 +149,43 @@ def suggest_books():
         initialize.streamlit.session_state.clicked_add = ''
         streamlit.rerun()
 
-    # Entrada de texto para o gênero literário
-    genre = streamlit.text_input("Algum gênero literário específico? (Se não, clique em sugerir)", placeholder="...")
+    
+    
+    option = streamlit.selectbox(
+        "Deseja pesquisa por algo específico? ",
+        ("Nenhum","Autor/Autora", "Gênero", "Tílulo"),
+    )
 
-    # Botão para sugerir um livro
-    if streamlit.button("Sugerir livro", use_container_width=True, type="primary"):
-        gen_book(genre)
+    if option == "Nenhum":
+        if streamlit.button("Sugerir livro", use_container_width=True, type="primary"):
+            gen_book(True, None, None, None)
+    
+    elif option == "Autor/Autora":
+        name_author = streamlit.text_input("Digite o nome do autor ou autora: ", placeholder="...")
+        if streamlit.button("Pesquisar autor/autora", use_container_width=True, type="primary"):
+            if name_author:
+                gen_book(None, name_author, None, None)
+            else:
+                streamlit.warning("Digite o nome do autor/autora do livro.")    
+    
+    elif option == "Gênero":
+        option_genre = streamlit.selectbox(
+        "Deseja pesquisa por algo específico? ",
+            (        
+            "Romance", "Conto", "Fantasia", "Ficção Científica", "Terror/Horror", 
+            "Policial/Detetivesco", "Aventura", "Distopia/Utopia", "Romance Histórico", 
+            "Biografia", "Autobiografia", "Diário/Cartas", "Poesia", "Tragédia", 
+            "Comédia", "Drama", "Fábula", "Lenda", "Crônica", "Suspense/Thriller", "Mistério"
+            )
+        )
+
+        if streamlit.button("Sugerir livro", use_container_width=True, type="primary"):
+           gen_book(None, None, option_genre, None)
+
+    elif option == "Tílulo":
+        title = streamlit.text_input("Digite o título do livro: ", placeholder="...")
+        if streamlit.button("Pesquisar livro", use_container_width=True, type="primary"):
+            if title:
+                gen_book(None, None, None, title)
+            else:
+                streamlit.warning("Digite o título do livro.")

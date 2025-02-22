@@ -8,7 +8,6 @@ class USER:
             # checando user, pelo email
             self.db.cursor.execute("SELECT id FROM Readmore_users WHERE email = ?", (user_email,)) 
             if self.db.cursor.fetchone():
-                streamlit.error("O email já está cadastrado!")
                 return False
             
             # insere o novo usuário
@@ -19,7 +18,6 @@ class USER:
                 """, (user_name, user_date_of_birth, user_email, user_password)
             )
             self.db.conn.commit()
-            print("Cadastrado com sucesso!")
             return True
 
     def check_password(self, user_id, user_password):
@@ -39,7 +37,6 @@ class USER:
         if copia_id:
             return copia_id[0]
         else:
-            print("Usuário não encontrado!")
             return None      
         
     def check_id(self, user_name, user_email, user_date_of_birth):

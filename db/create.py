@@ -7,7 +7,6 @@ class DataBase:
         db_path = os.path.expanduser("~/Teste0Readmore.db")
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
         self.cursor = self.conn.cursor()
-        print(f"Conectado ao banco de dados em: {db_path}")
 
     def create_table_users(self):
         self.cursor.execute(
@@ -49,7 +48,6 @@ class DataBase:
                 self.cursor.close()
             if self.conn:
                 self.conn.close()
-            print("Conexão com o banco de dados encerrada.")
         except Exception as e:
             print(f"Erro ao fechar o banco de dados: {e}")
 
