@@ -5,7 +5,7 @@ from db import create, books
 
 # Configuração da API do Google Generative AI
 genai.configure(api_key='-')
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 # Conexão com o banco de dados
 my_db = create.DataBase()

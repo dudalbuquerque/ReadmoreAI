@@ -9,7 +9,7 @@ import google.generativeai as genai
 from db import create, books
 
 genai.configure(api_key= '-')
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 # Conexão com o banco de dados
 my_db = create.DataBase()
