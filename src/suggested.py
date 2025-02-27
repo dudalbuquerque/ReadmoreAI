@@ -14,7 +14,7 @@ import google.generativeai as genai
 from db import create, books
 
 # Configura a API key (deve ser adicionada a do usuário)
-genai.configure(api_key= 'AIzaSyBzLoUzAigi93xMYsSNUs4AjCjoIEM0QKE')
+genai.configure(api_key= '-')
 model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 # Cria a conexão com o banco de dados e inicializa a class BOOK
