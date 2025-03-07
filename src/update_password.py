@@ -25,7 +25,7 @@ def update_password():
     Inicialmente, realiza a validação dos dados informados pelo usuário.
     Se os dados estiverem corretos, solicita a nova senha para alteração.
     """
-    streamlit.title("Forget PassWord")
+    streamlit.title("Redefinir senha")
     
     # -------------------------------------------------------------------
     # Se o usuário ainda não foi validado

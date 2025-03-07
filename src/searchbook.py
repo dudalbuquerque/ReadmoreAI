@@ -153,7 +153,7 @@ def suggest_books():
     
     option = streamlit.selectbox(
         "Deseja pesquisa por algo específico? ",
-        ("Nenhum","Autor/Autora", "Gênero", "Tílulo"),
+        ("Nenhum","Autor/Autora", "Gênero", "Título"),
     )
 
     if option == "Nenhum":

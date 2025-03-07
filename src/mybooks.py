@@ -21,7 +21,7 @@ def add_book():
         _, c2, _= streamlit.columns([1, 1, 1])
         with c2:
             book_assessment = streamlit.slider("Qual a nota do livro:", 0.0, 5.0, 2.5, format="%.1f")
-            streamlit.write(f"Valor do slider: {book_assessment:.1f}")
+          # streamlit.write(f"Valor do slider: {book_assessment:.1f}") [já aparece]
         if streamlit.button("Enviar"):
             if book_name:
                 # Obter informações do livro usando a API
@@ -104,7 +104,7 @@ def display_book_details(book_name, book_img_url, book_author, book_genre, book_
             streamlit.write(f"**Nome:** {book_name}")
             streamlit.write(f"**Autor:** {book_author}")
             streamlit.write(f"**Gênero:** {book_genre}")
-            streamlit.write(f"**Avaliação:** {book_assessment} / 5")
+            streamlit.write(f"**Avaliação:** {book_assessment:.1f} / 5")
             
             if streamlit.button("Fechar", type="primary", use_container_width=True):
                 streamlit.session_state.clicked_book = ''  # Limpa o estado do livro
