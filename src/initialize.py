@@ -1,4 +1,15 @@
 import streamlit
+import google.generativeai as genai
+from db import create, books, users
+
+# Configuração da API do Google Generative AI
+genai.configure(api_key='-')
+model = genai.GenerativeModel('gemini-pro')
+
+# Conexão com o banco de dados
+my_db = create.DataBase()
+book_user = books.BOOK(my_db)
+user = users.USER(my_db)
 
 def session_state():
     if "page" not in streamlit.session_state:

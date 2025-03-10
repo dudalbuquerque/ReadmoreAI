@@ -1,15 +1,7 @@
 import streamlit
 import google.generativeai as genai
-from src import mybooks, initialize, suggested
-from db import create, books
-
-# Configuração da API do Google Generative AI
-genai.configure(api_key='-')
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
-
-# Conexão com o banco de dados
-my_db = create.DataBase()
-book_user = books.BOOK(my_db)
+from src import mybooks, suggested
+from src.initialize import *
 
 def display_book_suggested(book):
     """
@@ -51,11 +43,11 @@ def display_book_suggested(book):
             
             with col1:
                 if streamlit.button("Adicionar a livros sugeridos", use_container_width=True, key=f"add_suggested_{book[0]}"):
-                    initialize.streamlit.session_state.clicked_add = book
+                    streamlit.session_state.clicked_add = book
             
             with col2:
                 if streamlit.button("Voltar", use_container_width=True):
-                    initialize.streamlit.session_state.clicked_add = ''
+                    streamlit.session_state.clicked_add = ''
                     streamlit.rerun()
 
 def gen_book(none, author, genre, title):
@@ -129,7 +121,7 @@ def gen_book(none, author, genre, title):
         
     suggested = suggested.split(" - ")
     print(suggested)
-    initialize.streamlit.session_state.clicked_book_suggest = suggested
+    streamlit.session_state.clicked_book_suggest = suggested
     streamlit.rerun()
 
 def suggest_books():
@@ -140,13 +132,13 @@ def suggest_books():
 
 
     # Exibe livro sugerido se houver um salvo na sessão
-    if initialize.streamlit.session_state.clicked_book_suggest:
-        display_book_suggested(initialize.streamlit.session_state.clicked_book_suggest)
+    if streamlit.session_state.clicked_book_suggest:
+        display_book_suggested(streamlit.session_state.clicked_book_suggest)
     
     # Adiciona livro à lista de sugeridos se houver um marcado para adição
-    if initialize.streamlit.session_state.clicked_add:
-        suggested.add_db_book_suggested(initialize.streamlit.session_state.clicked_add)
-        initialize.streamlit.session_state.clicked_add = ''
+    if streamlit.session_state.clicked_add:
+        suggested.add_db_book_suggested(streamlit.session_state.clicked_add)
+        streamlit.session_state.clicked_add = ''
         streamlit.rerun()
 
     

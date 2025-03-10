@@ -1,11 +1,8 @@
 import streamlit
-from db import users, create
 from src import principal, update_password
-from datetime import datetime, timedelta
+from datetime import datetime
+from src.initialize import *
 
-# conectando com o banco de dados
-my_db = create.DataBase()
-user = users.USER(my_db)
 
 # Definir o intervalo de anos
 ano_atual = datetime.today().year

@@ -1,6 +1,5 @@
 import streamlit
-from db import users, create
-from src import initialize
+from src.initialize import *
 from datetime import datetime
 
 # -------------------------------------------------------------------
@@ -9,12 +8,6 @@ from datetime import datetime
 ano_atual = datetime.today().year
 ano_minimo = ano_atual - 105  # Considera usuários com até 105 anos de idade
 ano_maximo = ano_atual - 18   # Considera usuários com no mínimo 18 anos
-
-# -------------------------------------------------------------------
-# Inicialização do banco de dados e objeto usuário
-# -------------------------------------------------------------------
-my_db = create.DataBase()
-user = users.USER(my_db)
 
 # -------------------------------------------------------------------
 # Função para atualização de senha do usuário
@@ -30,7 +23,7 @@ def update_password():
     # -------------------------------------------------------------------
     # Se o usuário ainda não foi validado
     # -------------------------------------------------------------------
-    if initialize.streamlit.session_state.validation == '':
+    if streamlit.session_state.validation == '':
         # Entradas para dados de identificação
         username = streamlit.text_input("Nome de usuário", placeholder="Digite nome usuário")
         email = streamlit.text_input("Qual o email cadastrado?", placeholder="Digite seu email")
@@ -58,19 +51,19 @@ def update_password():
                     # Realiza a verificação dos dados do usuário
                     validation = user.check_id(username, email, date_of_birth)
                     if validation:
-                        initialize.streamlit.session_state.validation = validation
+                        streamlit.session_state.validation = validation
                     else:
                         streamlit.error("Erro: Dados de usuário inválidos!")
         # Botão para voltar à tela de login
         with c3:
             if streamlit.button("Voltar", type="primary", use_container_width=True):
-                initialize.streamlit.session_state.page = "Login"
+                streamlit.session_state.page = "Login"
                 streamlit.rerun()
                 
     # -------------------------------------------------------------------
     # Se o usuário já foi validado, solicita a nova senha
     # -------------------------------------------------------------------
-    if initialize.streamlit.session_state.validation:
+    if streamlit.session_state.validation:
         # Entradas para a nova senha e sua confirmação
         password = streamlit.text_input("Senha", type="password", placeholder="Digite sua nova senha")
         check_password = streamlit.text_input("Confirme a senha", type="password", placeholder="Digite novamente sua nova senha")
@@ -86,7 +79,7 @@ def update_password():
                 # Verifica se as senhas informadas coincidem
                 if password == check_password:
                     # Atualiza a senha no banco de dados
-                    user.update_password(initialize.streamlit.session_state.validation)
+                    user.update_password(streamlit.session_state.validation)
                     streamlit.session_state.page = "Forget password"  # Redireciona ou atualiza a página conforme necessário
                     streamlit.rerun()
                 else:
@@ -95,5 +88,5 @@ def update_password():
         # Botão para voltar à tela de login
         with c3:
             if streamlit.button("Voltar", type="primary", use_container_width=True):
-                initialize.streamlit.session_state.page = "Login"
+                streamlit.session_state.page = "Login"
                 streamlit.rerun()

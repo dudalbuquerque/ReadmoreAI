@@ -6,20 +6,10 @@ from src import mybooks
 
 # Adiciona o diretório raiz ao sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src.initialize import *
 
 # Importa o módulo "initialize" do diretório src
 from src import initialize
-
-import google.generativeai as genai
-from db import create, books
-
-# Configura a API key (deve ser adicionada a do usuário)
-genai.configure(api_key= '-')
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
-
-# Cria a conexão com o banco de dados e inicializa a class BOOK
-my_db = create.DataBase()
-book_user = books.BOOK(my_db)
 
 def display_books_suggested_details(book):
     """"
@@ -59,9 +49,16 @@ def display_books_suggested_details(book):
             streamlit.write(f"**Autor:** {book[1]}")   # Autor
             streamlit.write(f"**Sinopse:** {book[2]}") # Sinopse, todas na segunda coluna
 
-            if streamlit.button("Fechar", type="primary", use_container_width=True):
-                streamlit.session_state.clicked_book_suggest = '' # Limpa o estado do livro
-                streamlit.rerun() # Atualiza a interface
+            left, _,  right = streamlit.columns([1, 1, 1])
+            with left:
+                if streamlit.button("deletar", type="primary", use_container_width=True):
+                    book_user.delete_book(book[0], initialize.streamlit.session_state.id, )
+                    streamlit.session_state.clicked_book_suggest = ''  # Limpa o estado do livro
+                    streamlit.rerun()  # Atualiza a interface
+            with right:
+                if streamlit.button("Fechar", type="primary", use_container_width=True):
+                    streamlit.session_state.clicked_book_suggest = ''  # Limpa o estado do livro
+                    streamlit.rerun()  # Atualiza a interface
 
         streamlit.markdown('</div>', unsafe_allow_html=True)
 
@@ -81,20 +78,23 @@ def show_books_suggested():
     books_data = book_user.return_info(streamlit.session_state.id, 0)
     columns = [c1, c2, c3, c4, c5]
 
-    for i, book in enumerate(books_data):
-        book_name = book[0]
-        book_img_url = book[4]
+    if(streamlit.session_state.clicked_book_suggest != ''):
+        display_books_suggested_details(streamlit.session_state.clicked_book_suggest)
 
-        column = columns[i % 5]
+    else:
+        for i, book in enumerate(books_data):
+            book_name = book[0]
+            book_img_url = book[4]
 
-        with column:
-            # Exibe a imagem do livro na coluna
-            streamlit.image(book_img_url, use_container_width=True)
+            column = columns[i % 5]
 
-            # Cria um botão com o nome do livro para abrir o modal de detalhes
-            if streamlit.button(f"{book_name}", use_container_width=True):
-                streamlit.session_state.clicked_book_suggest = book
-                streamlit.rerun() # Atualiza a interface
+            with column:
+                streamlit.image(book_img_url, use_container_width=True)
+                # Botão para abrir o modal do livro clicado
+                if streamlit.button(f"{book_name}", use_container_width=True):
+
+                    streamlit.session_state.clicked_book_suggest = book
+                    streamlit.rerun()  # Atualiza a interface
 
 def add_db_book_suggested(book):
     """

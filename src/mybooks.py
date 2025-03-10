@@ -3,7 +3,7 @@ import os
 import streamlit
 import requests
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from src import initialize
+from src.initialize import *
 
 import google.generativeai as genai
 from db import create, books
@@ -52,7 +52,7 @@ def add_book():
 
                 # Buscar URL da imagem do livro
                 book_img_url = get_book_image(book_name)
-                user_id = initialize.streamlit.session_state.id
+                user_id = streamlit.session_state.id
 
                 # Inserir no banco de dados
                 book_user.insert_book(
@@ -105,10 +105,17 @@ def display_book_details(book_name, book_img_url, book_author, book_genre, book_
             streamlit.write(f"**Autor:** {book_author}")
             streamlit.write(f"**Gênero:** {book_genre}")
             streamlit.write(f"**Avaliação:** {book_assessment:.1f} / 5")
-            
-            if streamlit.button("Fechar", type="primary", use_container_width=True):
-                streamlit.session_state.clicked_book = ''  # Limpa o estado do livro
-                streamlit.rerun()  # Atualiza a interface
+
+            left, _,  right = streamlit.columns([1, 1, 1])
+            with left:
+                if streamlit.button("Fechar", type="primary", use_container_width=True):
+                    streamlit.session_state.clicked_book = ''  # Limpa o estado do livro
+                    streamlit.rerun()  # Atualiza a interface
+            with right:
+                if streamlit.button("deletar", type="primary", use_container_width=True):
+                    book_user.delete_book(book_name, streamlit.session_state.id, )
+                    streamlit.session_state.clicked_book = ''  # Limpa o estado do livro
+                    streamlit.rerun()  # Atualiza a interface
             streamlit.markdown('</div>', unsafe_allow_html=True)
 
 def show_books():
@@ -119,7 +126,7 @@ def show_books():
     columns = [c1, c2, c3, c4, c5]
 
     # Exibe os detalhes do livro, caso um livro esteja selecionado
-    if initialize.streamlit.session_state.clicked_book != '':
+    if streamlit.session_state.clicked_book != '':
         book = streamlit.session_state.clicked_book
         display_book_details(
             book_name=book[0],
