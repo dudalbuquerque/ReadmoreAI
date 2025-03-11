@@ -181,3 +181,4 @@ def suggest_books():
                 gen_book(None, None, None, title)
             else:
                 streamlit.warning("Digite o título do livro.")
+suggest_books()

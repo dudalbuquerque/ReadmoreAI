@@ -196,3 +196,6 @@ def get_book_image(book_name):
             image_url = data["items"][0]["volumeInfo"].get("imageLinks", {}).get("thumbnail")
             return image_url
     return None
+
+show_books()
+add_book()

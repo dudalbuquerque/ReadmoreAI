@@ -139,3 +139,5 @@ def add_db_book_suggested(book):
     
     # Atualiza o estado do botão (indicando que a adição foi concluída)
     initialize.streamlit.session_state.clicked_add = ''
+
+show_books_suggested()
