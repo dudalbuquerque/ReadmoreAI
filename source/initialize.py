@@ -3,8 +3,8 @@ import google.generativeai as genai
 from database import create, books, users
 
 # Configuração da API do Google Generative AI
-genai.configure(api_key='AIzaSyD-nl4HoKxBchPb4OGo08ynrtSHOuMUjT4')
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
+genai.configure(api_key='-')
+model = genai.GenerativeModel('gemini-pro')
 
 # Conexão com o banco de dados
 my_db = create.DataBase()
@@ -31,11 +31,7 @@ def session_state():
     if "email" not in streamlit.session_state:
         streamlit.session_state.email = ''
     if "idade" not in streamlit.session_state:
-        streamlit.session_state.idade = ''   
-    if "book_assessment" not in streamlit.session_state or not isinstance(streamlit.session_state.book_assessment, (int, float)):
-        streamlit.session_state.book_assessment = 0
-    if "show_stars" not in streamlit.session_state:
-        streamlit.session_state.show_stars = False     
+        streamlit.session_state.idade = ''    
     if "books" not in streamlit.session_state:
         streamlit.session_state.books = []
     if "titles" not in streamlit.session_state:

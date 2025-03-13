@@ -4,7 +4,7 @@ import os
 class DataBase:
     def __init__(self):
         # Define o caminho do banco de dados no diretório do usuário
-        db_path = os.path.expanduser("~/Readmore.db")
+        db_path = os.path.expanduser("~/Teste0Readmore.db")
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
         self.cursor = self.conn.cursor()
 

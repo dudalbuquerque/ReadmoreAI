@@ -5,6 +5,16 @@ import requests
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from source.initialize import *
 
+import google.generativeai as genai
+from database import create, books
+
+genai.configure(api_key= '-')
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
+
+# Conexão com o banco de dados
+my_db = create.DataBase()
+book_user = books.BOOK(my_db)
+
 def add_book():
     if streamlit.session_state.get("book_input", False):
         book_name = streamlit.text_input("Digite o nome do livro:")
@@ -12,8 +22,8 @@ def add_book():
         with c2:
             #sentiment_mapping = ["one", "two", "three", "four", "five"]
             #selected = streamlit.feedback("stars")
-            book_assessment = streamlit.feedback(options= "stars", key=int)
-            #streamlit.write(f"Valor do slider: {book_assessment:.1f}") [já aparece]
+            book_assessment = streamlit.slider("Qual a nota do livro:", 0.0, 5.0, 2.5, format="%.1f")
+          # streamlit.write(f"Valor do slider: {book_assessment:.1f}") [já aparece]
         if streamlit.button("Enviar"):
             if book_name:
                 # Obter informações do livro usando a API
@@ -52,7 +62,7 @@ def add_book():
                     book_title=book_name.title(),
                     book_author=book_author_name,
                     book_genre=book_genero_name,
-                    book_assessment=book_assessment+1,
+                    book_assessment=book_assessment,
                     book_url=book_img_url,
                     book_read = 1
                 )# user_id, book_title, book_author, book_genre, book_assessment, book_url)
@@ -62,7 +72,7 @@ def add_book():
             else:
                 streamlit.error("Nome inválido.")
     else:
-        if streamlit.button("Adicionar Livro",type="primary", use_container_width=True):
+        if streamlit.button("Adicionar Livro", use_container_width=True):
             streamlit.session_state.book_input = True
             streamlit.rerun()
 
@@ -96,10 +106,7 @@ def display_book_details(book_name, book_img_url, book_author, book_genre, book_
             streamlit.write(f"**Nome:** {book_name}")
             streamlit.write(f"**Autor:** {book_author}")
             streamlit.write(f"**Gênero:** {book_genre}")
-            streamlit.write("**Avaliação:**")
-            
-            # Exibir estrelas de acordo com a avaliação
-            streamlit.markdown("⭐" * book_assessment)
+            streamlit.write(f"**Avaliação:** {book_assessment:.1f} / 5")
 
             left, _,  right = streamlit.columns([1, 1, 1])
             with left:

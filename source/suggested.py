@@ -57,25 +57,6 @@ def display_books_suggested_details(book):
                 if streamlit.button("Fechar", type="primary", use_container_width=True):
                     streamlit.session_state.clicked_book_suggest = ''  # Limpa o estado do livro
                     streamlit.rerun()  # Atualiza a interface
-            if streamlit.button("Adicionar a Meus Livros", use_container_width=True):
-                    streamlit.session_state.show_stars = True  # Habilita o slider
-                    streamlit.rerun()
-            if streamlit.session_state.show_stars:
-                left, right = streamlit.columns([3, 1])
-                with left:
-                    streamlit.write("**Quantas estrelas pra este livro?**")
-                    streamlit.session_state.book_assessment = streamlit.feedback(options= "stars", key=int)
-                with right:
-                    streamlit.write(" ")
-                    streamlit.write(" ")
-                    if streamlit.button("Ir", use_container_width=True):
-                        # Atualiza o livro no banco de dados
-                        book_user.update_book(
-                            initialize.streamlit.session_state.id, book[0], book[1], book[2], streamlit.session_state.book_assessment+1
-                        )
-                        streamlit.session_state.clicked_book_suggest = ''  # Limpa o estado do livro
-                        streamlit.session_state.show_stars = False  # Esconde o slider
-                        streamlit.rerun()  # Atualiza a interface
 
         streamlit.markdown('</div>', unsafe_allow_html=True)
 
@@ -109,6 +90,7 @@ def show_books_suggested():
                 streamlit.image(book_img_url, use_container_width=True)
                 # Botão para abrir o modal do livro clicado
                 if streamlit.button(f"{book_name}", use_container_width=True):
+
                     streamlit.session_state.clicked_book_suggest = book
                     streamlit.rerun()  # Atualiza a interface
 

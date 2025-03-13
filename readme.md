@@ -53,7 +53,7 @@ pip install -r requirements.txt
 Antes de executar o projeto, é necessário configurar o banco de dados. Execute o seguinte comando para criar as tabelas e estruturas necessárias:
 
 ```bash
-python database/create.py
+python db/create.py
 ```
 
 ### 5. Configurar Chave API
