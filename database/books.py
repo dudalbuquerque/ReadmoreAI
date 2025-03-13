@@ -34,7 +34,19 @@ class BOOK:
             #print("livro inserido!")
         else:
             return 0
-    
+        
+    def update_book(self, user_id, book_title, book_author, book_genre, book_assessment):
+        book_id = self.get_idbook(book_title, user_id)
+        self.db.cursor.execute(
+                """
+                UPDATE Readmore_books
+                SET assessment = ?, read = ?
+                WHERE id = ? AND user_id = ? AND title = ? AND author = ? AND genre = ?;
+                """, (book_assessment, True, book_id, user_id, book_title, book_author, book_genre)
+            )
+        self.db.conn.commit()
+        
+        
     def return_condition_book(self, user_id, book_title):
         query = "SELECT read FROM Readmore_books WHERE user_id = ? AND title = ?"
         self.db.cursor.execute(query, (user_id, book_title))
