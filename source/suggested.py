@@ -37,38 +37,37 @@ def display_books_suggested_details(book):
 
     # Cria o expander para mostrar os detalhes do livro
     with streamlit.expander("Detalhes do Livro", expanded=True):
-        streamlit.markdown('<div class="expander-content">', unsafe_allow_html=True)
-        c1, c2 = streamlit.columns([1, 2]) # Cria duas colunas
+        col1, col2 = streamlit.columns([10, 1])
+        with col1:
+            streamlit.markdown('<div class="expander-content">', unsafe_allow_html=True)
+            c1, c2 = streamlit.columns([1, 2]) # Cria duas colunas
 
-        with c1:
-            streamlit.image(book_img_url, width=200) # Exibe a imagem do livro na primeira coluna
-        with c2:
-            streamlit.write(f"**Nome:** {book[0]}")    # Nome do livro
-            streamlit.write(f"**Autor:** {book[1]}")   # Autor
-            streamlit.write(f"**Sinopse:** {book[2]}") # Sinopse, todas na segunda coluna
+            with c1:
+                streamlit.image(book_img_url, width=200) # Exibe a imagem do livro na primeira coluna
+            with c2:
+                streamlit.write(f"**Nome:** {book[0]}")    # Nome do livro
+                streamlit.write(f"**Autor:** {book[1]}")   # Autor
+                streamlit.write(f"**Sinopse:** {book[2]}") # Sinopse, todas na segunda coluna
 
-            left, _,  right = streamlit.columns([1, 1, 1])
+            left, right = streamlit.columns([1, 1])
             with left:
-                if streamlit.button("deletar", type="primary", use_container_width=True):
+                if streamlit.button("🗑️ Deletar", type="primary", use_container_width=True):
                     book_user.delete_book(book[0], initialize.streamlit.session_state.id, )
                     streamlit.session_state.clicked_book_suggest = ''  # Limpa o estado do livro
                     streamlit.rerun()  # Atualiza a interface
             with right:
-                if streamlit.button("Fechar", type="primary", use_container_width=True):
-                    streamlit.session_state.clicked_book_suggest = ''  # Limpa o estado do livro
-                    streamlit.rerun()  # Atualiza a interface
-            if streamlit.button("Adicionar a Meus Livros", use_container_width=True):
-                    streamlit.session_state.show_stars = True  # Habilita o slider
-                    streamlit.rerun()
+                if streamlit.button("Adicionar a Meus Livros", use_container_width=True):
+                        streamlit.session_state.show_stars = True  # Habilita o slider
+                        streamlit.rerun()
             if streamlit.session_state.show_stars:
                 left, right = streamlit.columns([3, 1])
                 with left:
-                    streamlit.write("**Quantas estrelas pra este livro?**")
+                    streamlit.write(f"**Quantas estrelas para {book[0]}?**")
                     streamlit.session_state.book_assessment = streamlit.feedback(options= "stars", key=int)
                 with right:
                     streamlit.write(" ")
                     streamlit.write(" ")
-                    if streamlit.button("Ir", use_container_width=True):
+                    if streamlit.button("✅ Salvar", use_container_width=True):
                         # Atualiza o livro no banco de dados
                         book_user.update_book(
                             initialize.streamlit.session_state.id, book[0], book[1], book[2], streamlit.session_state.book_assessment+1
@@ -76,7 +75,10 @@ def display_books_suggested_details(book):
                         streamlit.session_state.clicked_book_suggest = ''  # Limpa o estado do livro
                         streamlit.session_state.show_stars = False  # Esconde o slider
                         streamlit.rerun()  # Atualiza a interface
-
+        with col2:
+            if streamlit.button("❌"):
+                streamlit.session_state.clicked_book_suggest = ''  # Limpa o estado do livro
+                streamlit.rerun()          
         streamlit.markdown('</div>', unsafe_allow_html=True)
 
 

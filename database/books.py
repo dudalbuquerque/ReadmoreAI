@@ -46,7 +46,14 @@ class BOOK:
             )
         self.db.conn.commit()
         
+    def return_assessment(self, user_id, book_title):
+        book_id = self.get_idbook(book_title, user_id)
+        query = "SELECT assessment FROM Readmore_books WHERE user_id = ? AND id = ?"
+        self.db.cursor.execute(query, (user_id, book_id))
+        assessment = self.db.cursor.fetchone()
+        return assessment[0]
         
+
     def return_condition_book(self, user_id, book_title):
         query = "SELECT read FROM Readmore_books WHERE user_id = ? AND title = ?"
         self.db.cursor.execute(query, (user_id, book_title))

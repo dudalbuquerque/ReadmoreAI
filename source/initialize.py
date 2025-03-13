@@ -21,30 +21,16 @@ def session_state():
     if "clicked_add" not in streamlit.session_state:
         streamlit.session_state.clicked_add = ''
     if "menu_expanded" not in streamlit.session_state:
-        streamlit.session_state.menu_expanded = True
+        streamlit.session_state.menu_expanded = False
     if "validation" not in streamlit.session_state:
         streamlit.session_state.validation = ''    
     if "username" not in streamlit.session_state:
         streamlit.session_state.username = ''
     if "id" not in streamlit.session_state:
         streamlit.session_state.id = ''
-    if "email" not in streamlit.session_state:
-        streamlit.session_state.email = ''
-    if "idade" not in streamlit.session_state:
-        streamlit.session_state.idade = ''   
     if "book_assessment" not in streamlit.session_state or not isinstance(streamlit.session_state.book_assessment, (int, float)):
         streamlit.session_state.book_assessment = 0
     if "show_stars" not in streamlit.session_state:
         streamlit.session_state.show_stars = False     
-    if "books" not in streamlit.session_state:
-        streamlit.session_state.books = []
-    if "titles" not in streamlit.session_state:
-        streamlit.session_state.titles = []
-    if "messages" not in streamlit.session_state:
-        streamlit.session_state.messages = []
     if "book_input" not in streamlit.session_state:
         streamlit.session_state.book_input = False
-    if "sugeridos" not in streamlit.session_state:
-        streamlit.session_state.sugeridos = []
-    if "nomes_sugeridos" not in streamlit.session_state:
-        streamlit.session_state.nomes_sugeridos = []
