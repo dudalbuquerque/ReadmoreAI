@@ -85,7 +85,7 @@ Aqui está uma visão geral da estrutura do projeto:
 ```
 ReadmoreAi/
 │
-├── db/
+├── database/
 │   ├── books.py          # Gerenciamento de livros no banco de dados
 │   ├── create.py         # Script para criar o banco de dados
 │   ├── users.py          # Gerenciamento de usuários no banco de dados
@@ -94,7 +94,7 @@ ReadmoreAi/
 │
 ├── img/                  # Diretório para armazenar imagens
 │
-├── src/
+├── source/
 │   ├── initialize.py     # Inicialização do projeto
 │   ├── mybooks.py        # Gerenciamento de livros
 │   ├── pages.py          # Configuração das páginas
