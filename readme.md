@@ -63,10 +63,10 @@ Por último, é necessário adicionar sua chave de API no arquivo `initialize.py
 No arquivo encontre a seguinte linha:
 
 ```python
-genai.configure(api_key='-')
+genai.configure(api_key="-")
 ```
 
-Substitua `'-'` pela sua chave de API válida.
+Substitua `-` pela sua chave de API válida.
 
 ### 6. Executar o Projeto
 
@@ -89,7 +89,7 @@ ReadmoreAi/
 │   ├── create.py         # Script para criar o banco de dados
 │   ├── users.py          # Gerenciamento de usuários no banco de dados
 ├── env/                  # Ambiente virtual
-├── img/                  # Diretório para armazenar imagens
+├── images/                  # Diretório para armazenar imagens
 ├── source/
 │   ├── initialize.py     # Inicialização do projeto e configuração da API
 │   ├── login.py          # Código da página de login
@@ -123,7 +123,7 @@ Após seguir os passos de configuração e execução descritos acima, você pod
 
 ## Imagens do Projeto
 
-A pasta **img/** contém imagens relacionadas ao projeto.
+A pasta **images/** contém imagens relacionadas ao projeto.
 
 
 ## Status do Projeto
