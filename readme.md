@@ -53,14 +53,14 @@ pip install -r requirements.txt
 Antes de executar o projeto, é necessário configurar o banco de dados. Execute o seguinte comando para criar as tabelas e estruturas necessárias:
 
 ```bash
-python db/create.py
+python database/create.py
 ```
 
 ### 5. Configurar Chave API
 
-Por último, é necessário adicionar sua chave de API nos arquivos `mybooks.py` e `suggest.py`, dentro da pasta `src`.
+Por último, é necessário adicionar sua chave de API no arquivo `initialize.py` dentro da pasta `source`.
 
-Em cada um desses arquivos, encontre a seguinte linha:
+No arquivo encontre a seguinte linha:
 
 ```python
 genai.configure(api_key='-')
@@ -84,28 +84,24 @@ Aqui está uma visão geral da estrutura do projeto:
 
 ```
 ReadmoreAi/
-│
-├── db/
+├── database/
 │   ├── books.py          # Gerenciamento de livros no banco de dados
 │   ├── create.py         # Script para criar o banco de dados
 │   ├── users.py          # Gerenciamento de usuários no banco de dados
-│
 ├── env/                  # Ambiente virtual
-│
 ├── img/                  # Diretório para armazenar imagens
-│
-├── src/
-│   ├── initialize.py     # Inicialização do projeto
+├── source/
+│   ├── initialize.py     # Inicialização do projeto e configuração da API
+│   ├── login.py          # Código da página de login
 │   ├── mybooks.py        # Gerenciamento de livros
-│   ├── pages.py          # Configuração das páginas
-│   ├── principal.py      # Arquivo principal do projeto
-│   ├── suggest.py        # Sistema de sugestões
-│
+│   ├── pages.py          # Configuração das páginas (antigo principal.py, renomeado para pages.py)
+│   ├── searchbook.py     # Sistema de busca de livros
+│   ├── sidebar.py        # Menu lateral
+│   ├── suggested.py      # Sistema de sugestões de livros
 ├── main.py               # Ponto de entrada principal do projeto
-│
 ├── requirements.txt      # Lista de dependências do projeto
-│
 └── readme.md             # Este arquivo
+
 ```
 
 ## Como utilizar o Projeto

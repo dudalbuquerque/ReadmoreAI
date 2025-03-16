@@ -1,10 +1,10 @@
-import streamlit
+import streamlit as st
 import google.generativeai as genai
 from database import create, books, users
 
-# Configuração da API do Google Generative AI
-genai.configure(api_key='-')
-model = genai.GenerativeModel('gemini-pro')
+# Configuração da API do Google Generative AI (único ponto de configuração)
+genai.configure(api_key="-")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 # Conexão com o banco de dados
 my_db = create.DataBase()
@@ -12,35 +12,25 @@ book_user = books.BOOK(my_db)
 user = users.USER(my_db)
 
 def session_state():
-    if "page" not in streamlit.session_state:
-        streamlit.session_state.page = "Login"
-    if "clicked_book" not in streamlit.session_state:
-        streamlit.session_state.clicked_book = ''
-    if "clicked_book_suggest" not in streamlit.session_state:
-        streamlit.session_state.clicked_book_suggest = ''
-    if "clicked_add" not in streamlit.session_state:
-        streamlit.session_state.clicked_add = ''
-    if "menu_expanded" not in streamlit.session_state:
-        streamlit.session_state.menu_expanded = True
-    if "validation" not in streamlit.session_state:
-        streamlit.session_state.validation = ''    
-    if "username" not in streamlit.session_state:
-        streamlit.session_state.username = ''
-    if "id" not in streamlit.session_state:
-        streamlit.session_state.id = ''
-    if "email" not in streamlit.session_state:
-        streamlit.session_state.email = ''
-    if "idade" not in streamlit.session_state:
-        streamlit.session_state.idade = ''    
-    if "books" not in streamlit.session_state:
-        streamlit.session_state.books = []
-    if "titles" not in streamlit.session_state:
-        streamlit.session_state.titles = []
-    if "messages" not in streamlit.session_state:
-        streamlit.session_state.messages = []
-    if "book_input" not in streamlit.session_state:
-        streamlit.session_state.book_input = False
-    if "sugeridos" not in streamlit.session_state:
-        streamlit.session_state.sugeridos = []
-    if "nomes_sugeridos" not in streamlit.session_state:
-        streamlit.session_state.nomes_sugeridos = []
+    """Inicializa as variáveis de estado da sessão, se ainda não existirem."""
+    defaults = {
+        "page": "Login",
+        "clicked_book": "",
+        "clicked_book_suggest": "",
+        "clicked_add": "",
+        "menu_expanded": True,
+        "validation": "",
+        "username": "",
+        "id": "",
+        "email": "",
+        "idade": "",
+        "books": [],
+        "titles": [],
+        "messages": [],
+        "book_input": False,
+        "sugeridos": [],
+        "nomes_sugeridos": []
+    }
+    for key, value in defaults.items():
+        if key not in st.session_state:
+            st.session_state[key] = value

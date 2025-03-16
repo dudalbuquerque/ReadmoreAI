@@ -1,16 +1,10 @@
-import streamlit
-from source import initialize
+import streamlit as st
 
-# Tela Principal com Sidebar
 def menu_expanded():
-    with streamlit.sidebar:
-        streamlit.title("Menu")
-
-        c1, _, c3= streamlit.columns([1, 1, 1])
-        with c1:
-            streamlit.write(f"{initialize.streamlit.session_state.username}")
-        
-        with c3:
-            if streamlit.button("Logout", type="primary", use_container_width=True):                 
-                initialize.streamlit.session_state.page = "Login"                 
-                streamlit.rerun()
+    """Exibe o menu lateral com informações do usuário e opção de logout."""
+    with st.sidebar:
+        st.title("Menu")
+        st.write(st.session_state.username)
+        if st.button("Logout", type="primary", use_container_width=True):
+            st.session_state.page = "Login"
+            st.rerun()
