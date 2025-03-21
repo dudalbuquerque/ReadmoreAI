@@ -1,14 +1,13 @@
-import streamlit
-import google.generativeai as genai
+import streamlit as st
 from source import mybooks, suggested
-from source.initialize import *
+from source.initialize import session_state, model, book_user
 
 def display_book_suggested(book):
     """
     Exibe um livro sugerido com imagem, nome, autor e sinopse.
     """
     # Estilo personalizado para centralizar os elementos
-    streamlit.markdown(
+    st.markdown(
         """
         <style>
         .expander-content {
@@ -23,35 +22,33 @@ def display_book_suggested(book):
         unsafe_allow_html=True,
     )
     
-    # Exibe o livro sugerido em um Expander
-    with streamlit.expander("Livro sugerido", expanded=True):
-        c1, c2 = streamlit.columns([1, 2])
-        
-        with c1:
-            # Mostra a imagem do livro
-            book_img_url = mybooks.get_book_image(book[0])  
-            streamlit.image(book_img_url, width=200)
+    with st.expander("Livro sugerido", expanded=True):
+        col1, col2 = st.columns([10, 1])
+        with col1:
+            st.markdown('<div class="expander-content">', unsafe_allow_html=True)
+            c1, c2 = st.columns([1, 2]) # Cria duas colunas
 
-        with c2:
-            # Exibe informações do livro
-            streamlit.write(f"**Nome:** {book[0]}")
-            streamlit.write(f"**Autor:** {book[1]}")
-            streamlit.write(f"**Sinopse:** {book[2]}")
+            with c1:
+                book_img_url = mybooks.get_book_image(book[0])
+                st.image(book_img_url, width=200) # Exibe a imagem do livro na primeira coluna
+            with c2:
+                st.write(f"**Nome:** {book[0]}")    # Nome do livro
+                st.write(f"**Autor:** {book[1]}")   # Autor
+                st.write(f"**Sinopse:** {book[2]}") # Sinopse, todas na segunda coluna
 
-            # Botões para adicionar ou voltar
-            col1, col2 = streamlit.columns(2)
-            
-            with col1:
-                if streamlit.button("Adicionar a livros sugeridos", use_container_width=True, key=f"add_suggested_{book[0]}"):
-                    streamlit.session_state.clicked_add = book
-            
-            with col2:
-                if streamlit.button("Voltar", use_container_width=True):
-                    streamlit.session_state.clicked_add = ''
-                    streamlit.rerun()
+                if st.button("Adicionar a livros sugeridos", use_container_width=True, key=f"add_suggested_{book[0]}"):
+                        st.session_state.clicked_add = book
+                        st.session_state.clicked_book_suggest = ''
+
+        with col2:
+            if st.button("❌", key="close_suggestion"):
+                st.session_state.clicked_book_suggest = ''
+                st.session_state.clicked_add = ''
+                st.rerun()         
+        st.markdown('</div>', unsafe_allow_html=True)
 
 def gen_book(none, author, genre, title):
-    book_list = book_user.books_list(streamlit.session_state.id, genre)
+    book_list = book_user.books_list(st.session_state.id, genre)
     if none:
         if not book_list:
             suggested = model.generate_content(
@@ -112,7 +109,7 @@ def gen_book(none, author, genre, title):
     elif title:
         suggested = model.generate_content(
             f"""
-            Sugira apenas um livro que não esteja na lista de nomes e notas: {book_list} e que tenha um título semelhante ou igual a {title}. 
+            Retorne o livro com o título {title}. 
             Liste no seguinte formato, sem destaques ou formatação especial: Nome do Livro - Nome do Autor - Sinopse do Livro. 
             A sinopse deve ser clara e envolvente, sem revelar spoilers importantes. 
             Não utilize caracteres especiais.
@@ -120,48 +117,47 @@ def gen_book(none, author, genre, title):
         ).text.strip()
         
     suggested = suggested.split(" - ")
-    print(suggested)
-    streamlit.session_state.clicked_book_suggest = suggested
-    streamlit.rerun()
+    st.session_state.clicked_book_suggest = suggested
+    st.rerun()
 
 def suggest_books():
     """
     Interface principal para sugerir livros com base no gênero informado pelo usuário.
     """
-    streamlit.markdown("## Buscar Livros")
+    st.markdown("## Buscar Livros")
 
 
     # Exibe livro sugerido se houver um salvo na sessão
-    if streamlit.session_state.clicked_book_suggest:
-        display_book_suggested(streamlit.session_state.clicked_book_suggest)
+    if st.session_state.clicked_book_suggest:
+        display_book_suggested(st.session_state.clicked_book_suggest)
     
     # Adiciona livro à lista de sugeridos se houver um marcado para adição
-    if streamlit.session_state.clicked_add:
-        suggested.add_db_book_suggested(streamlit.session_state.clicked_add)
-        streamlit.session_state.clicked_add = ''
-        streamlit.rerun()
+    if st.session_state.clicked_add:
+        suggested.add_db_book_suggested(st.session_state.clicked_add)
+        st.session_state.clicked_add = ''
+        st.rerun()
 
     
     
-    option = streamlit.selectbox(
+    option = st.selectbox(
         "Deseja pesquisa por algo específico? ",
         ("Nenhum","Autor/Autora", "Gênero", "Título"),
     )
 
     if option == "Nenhum":
-        if streamlit.button("Sugerir livro", use_container_width=True, type="primary"):
+        if st.button("Sugerir livro", use_container_width=True, type="primary"):
             gen_book(True, None, None, None)
     
     elif option == "Autor/Autora":
-        name_author = streamlit.text_input("Digite o nome do autor ou autora: ", placeholder="...")
-        if streamlit.button("Pesquisar autor/autora", use_container_width=True, type="primary"):
+        name_author = st.text_input("Digite o nome do autor ou autora: ", placeholder="...")
+        if st.button("Pesquisar autor/autora", use_container_width=True, type="primary"):
             if name_author:
                 gen_book(None, name_author, None, None)
             else:
-                streamlit.warning("Digite o nome do autor/autora do livro.")    
+                st.warning("Digite o nome do autor/autora do livro.")    
     
     elif option == "Gênero":
-        option_genre = streamlit.selectbox(
+        option_genre = st.selectbox(
         "Deseja pesquisa por algo específico? ",
             (        
             "Romance", "Conto", "Fantasia", "Ficção Científica", "Terror/Horror", 
@@ -171,14 +167,13 @@ def suggest_books():
             )
         )
 
-        if streamlit.button("Sugerir livro", use_container_width=True, type="primary"):
+        if st.button("Sugerir livro", use_container_width=True, type="primary"):
            gen_book(None, None, option_genre, None)
 
-    elif option == "Tílulo":
-        title = streamlit.text_input("Digite o título do livro: ", placeholder="...")
-        if streamlit.button("Pesquisar livro", use_container_width=True, type="primary"):
+    elif option == "Título":
+        title = st.text_input("Digite o título do livro: ", placeholder="...")
+        if st.button("Pesquisar livro", use_container_width=True, type="primary"):
             if title:
                 gen_book(None, None, None, title)
             else:
-                streamlit.warning("Digite o título do livro.")
-suggest_books()
+                st.warning("Digite o título do livro.")
