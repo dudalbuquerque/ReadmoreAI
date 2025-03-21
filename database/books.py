@@ -35,25 +35,13 @@ class BOOK:
         else:
             return 0
         
-    def update_book(self, user_id, book_title, book_author, book_genre, book_assessment):
-        book_id = self.get_idbook(book_title, user_id)
-        self.db.cursor.execute(
-                """
-                UPDATE Readmore_books
-                SET assessment = ?, read = ?
-                WHERE id = ? AND user_id = ? AND title = ? AND author = ? AND genre = ?;
-                """, (book_assessment, True, book_id, user_id, book_title, book_author, book_genre)
-            )
-        self.db.conn.commit()
-        
     def return_assessment(self, user_id, book_title):
         book_id = self.get_idbook(book_title, user_id)
         query = "SELECT assessment FROM Readmore_books WHERE user_id = ? AND id = ?"
         self.db.cursor.execute(query, (user_id, book_id))
         assessment = self.db.cursor.fetchone()
         return assessment[0]
-        
-
+    
     def return_condition_book(self, user_id, book_title):
         query = "SELECT read FROM Readmore_books WHERE user_id = ? AND title = ?"
         self.db.cursor.execute(query, (user_id, book_title))
@@ -77,15 +65,13 @@ class BOOK:
             #print("Livro não encontrado!")
             return None
 
-    def delete_book(self, titulo_para_deletar, book_id, user_id):
+    def delete_book(self, title_for_delete, user_id):
+        book_id = self.get_idbook(title_for_delete, user_id)
         query = "DELETE FROM Readmore_books WHERE title = ? AND id = ? AND user_id = ?;"
-        self.db.cursor.execute(query, (titulo_para_deletar, book_id, user_id))
+        self.db.cursor.execute(query, (title_for_delete, book_id, user_id))
         self.db.conn.commit()
-        result = self.db.procurando_livro(titulo_para_deletar)
-        if result:
-            print("Livro deletado com sucesso!!")
-        else:
-            print("Erro ao deletar")
+        return
+
 
     def return_info(self, user_id, book_read):
         query = "SELECT title, author, genre, assessment, url, read read FROM Readmore_books WHERE user_id = ? AND read = ?;"
@@ -102,4 +88,12 @@ class BOOK:
             self.db.cursor.execute(query, (user_id, book_genre))
         books = self.db.cursor.fetchall()
         return books
+    
+    def book_count(self, user_id):
+        query = "SELECT COUNT(*) FROM Readmore_books WHERE user_id = ? AND READ = ?;"
+        self.db.cursor.execute(query, (user_id, True))
+        amount_read = self.db.cursor.fetchone()[0]
+        self.db.cursor.execute(query, (user_id, False))
+        amount_not_read = self.db.cursor.fetchone()[0] 
+        return amount_read, amount_not_read
     
