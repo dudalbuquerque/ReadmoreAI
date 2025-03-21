@@ -1,221 +1,152 @@
-import streamlit
+import streamlit as st
 from source import principal
 from datetime import datetime
-from source.initialize import *
-# -------------------------------------------------------------------
-# Definir intervalo de anos para a data de nascimento
-# -------------------------------------------------------------------
-ano_atual = datetime.today().year
-ano_minimo = ano_atual - 105  # Considera usuários com até 105 anos de idade
-ano_maximo = ano_atual - 18   # Considera usuários com no mínimo 18 anos
+from source.initialize import user
 
-
+# Define intervalo de idade para cadastro
+current_year = datetime.today().year
+min_year = current_year - 105  # Usuários com até 105 anos
+max_year = current_year - 18   # Usuários com no mínimo 18 anos
 
 def login():
-    # streamlit.image("img/user.png", width=100)
-
-    streamlit.title("Login")
-    
-    # Campo para o nome de usuário
-    username = streamlit.text_input("Nome de Usuário", placeholder="Digite seu nome")
+    """Renderiza a página de login."""
+    st.title("Login")
+    username = st.text_input("Nome de Usuário", placeholder="Digite seu nome")
     id_user = user.get_id(username)
+    password = st.text_input("Senha", type="password", placeholder="Digite sua senha")
 
-    # Campo para a senha
-    password = streamlit.text_input("Senha", type="password", placeholder="Digite sua senha")
-
-    left, midle, right= streamlit.columns([1, 1, 1])
+    left, middle, right = st.columns([1, 1, 1])
     with left:
-        if streamlit.button("Esqueci a senha", type="tertiary"):
-            streamlit.session_state.page = "Forget password"
-            streamlit.rerun()
-    with midle:
-            streamlit.write(" ")
-            streamlit.write("")
-    with right:
-            streamlit.write(" ")
-            streamlit.write("")            
-    # Inicializar tentativas na sessão
-    if "login_attempts" not in streamlit.session_state:
-        streamlit.session_state.login_attempts = 0
+        if st.button("Esqueci a senha", type="tertiary"):
+            st.session_state.page = "Esqueceu Senha"
+            st.rerun()
 
-    # Mensagem para senha incorreta
-    if "incorrect_password" in streamlit.session_state and streamlit.session_state.incorrect_password:
-        streamlit.error("Senha incorreta. Você tem "
-                        f"{3 - streamlit.session_state.login_attempts} tentativa(s) restante(s).")
+    if "login_attempts" not in st.session_state:
+        st.session_state.login_attempts = 0
 
-    # Colunas para alinhamento dos botões
-    c1, _, c3 = streamlit.columns([1, 1, 1])
+    if st.session_state.get("incorrect_password", False):
+        st.error(f"Senha incorreta. Você tem {3 - st.session_state.login_attempts} tentativa(s) restante(s).")
 
-    with c1:
-        streamlit.write("")
-        if streamlit.button("Entrar", type="primary", use_container_width=True):
-            c1 = streamlit.columns([1])
-            # Verificar se os campos foram preenchidos
+    col1, _, col3 = st.columns([1, 1, 1])
+    with col1:
+        if st.button("Entrar", type="primary", use_container_width=True):
             if not username or not password:
-                streamlit.error("Por favor, preencha todos os campos.")
+                st.error("Por favor, preencha todos os campos.")
             elif not id_user:
-                streamlit.warning("Este usuário não existe.")
-            elif streamlit.session_state.login_attempts >= 3:
-                streamlit.error("Você excedeu o limite de tentativas. Tente novamente mais tarde.")
+                st.warning("Este usuário não existe.")
+            elif st.session_state.login_attempts >= 3:
+                st.error("Você excedeu o limite de tentativas. Tente novamente mais tarde.")
             elif user.check_password(id_user, password):
-                # Login bem-sucedido
-                streamlit.session_state.username = username
-                streamlit.session_state.id = id_user
-                streamlit.session_state.page = "Main"
-                streamlit.session_state.login_attempts = 0  # Resetar tentativas
-                streamlit.session_state.incorrect_password = False  # Resetar flag
-                streamlit.rerun()
+                st.session_state.username = username
+                st.session_state.id = id_user
+                st.session_state.page = "Inicio"
+                st.session_state.login_attempts = 0
+                st.session_state.incorrect_password = False
+                st.rerun()
             else:
-                # Incrementar o contador de tentativas e marcar senha incorreta
-                streamlit.session_state.login_attempts += 1
-                streamlit.session_state.incorrect_password = True
+                st.session_state.login_attempts += 1
+                st.session_state.incorrect_password = True
 
-    with c3:
-        streamlit.write("")
-        if streamlit.button("Cadastrar-se", use_container_width=True):
-            # Redirecionar para a página de cadastro
-            streamlit.session_state.page = "Cadastro"
-            streamlit.rerun()
+    with col3:
+        if st.button("Cadastrar-se", use_container_width=True):
+            st.session_state.page = "Cadastro"
+            st.rerun()
 
 def cadastro():
-    # Exibir imagem (descomente a linha abaixo e ajuste o caminho caso necessário)
-    # st.image("img/user.png", width=100)
-
-    streamlit.title("Cadastro")
-
-    # Inicializando o campo de texto com session_state
-    if "username" not in streamlit.session_state:
-        streamlit.session_state.username = ''
+    """Renderiza a página de cadastro."""
+    st.title("Cadastro")
+    if "username" not in st.session_state:
+        st.session_state.username = ""
     
-    # Utilizando text_input para pegar as entradas do usuário
-    username = streamlit.text_input("Nome de Usuário", placeholder="Digite seu nome", value=streamlit.session_state.username)
-
-    # Verificar se o nome de usuário já existe no banco de dados
+    username = st.text_input("Nome de Usuário", placeholder="Digite seu nome", value=st.session_state.username)
     id_user = user.get_id(username) if username else None
 
-    # Mostrar mensagem se o nome de usuário já existe
     if id_user:
-        streamlit.warning("Ops, este não pode, escolha outro!")
+        st.warning("Ops, este não pode, escolha outro!")
 
+    email = st.text_input("Email", placeholder="Digite seu email")
+    date_of_birth = st.date_input(
+        "Qual sua data de nascimento?",
+        value=None,
+        format="DD/MM/YYYY",
+        min_value=datetime(min_year, 1, 1),
+        max_value=datetime(max_year, 12, 31)
+    )
+    password = st.text_input("Senha", type="password", placeholder="Digite uma senha")
+    confirmar_password = st.text_input("Confirmar senha", type="password", placeholder="Digite novamente a senha")
 
-    # Entradas adicionais
-    email = streamlit.text_input("Email", placeholder="Digite seu email")
-    date_of_birth = streamlit.date_input("Qual sua data de nascimento?", value=None, format="DD/MM/YYYY", min_value=datetime(ano_minimo, 1, 1), max_value=datetime(ano_maximo, 12, 31))
-    password = streamlit.text_input("Senha", type="password", placeholder="Digite uma senha")
-    confirmar_password = streamlit.text_input("Confirmar senha", type="password", placeholder="Digite novamente a senha")
-
-    col1, col2, col3 = streamlit.columns([1, 1, 1])  # Colunas para os botões
-    # Validando os dados e cadastrando o usuário
-    with streamlit.container():
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with st.container():
         with col1:
-            if streamlit.button("Cadastrar", use_container_width=True):
-                # Validando preenchimento de campos
+            if st.button("Cadastrar", use_container_width=True):
                 if not (username and email and date_of_birth and password and confirmar_password):
-                    streamlit.error("Por favor, preencha todos os campos.")
+                    st.error("Por favor, preencha todos os campos.")
                 elif password != confirmar_password:
-                    streamlit.error("As senhas não coincidem. Tente novamente.")
+                    st.error("As senhas não coincidem. Tente novamente.")
                 else:
-                    # Cadastro do usuário
                     user.register_user(username, date_of_birth, email, password)
-                    streamlit.success("Cadastro realizado com sucesso!")
+                    st.success("Cadastro realizado com sucesso!")
+                    st.session_state.username = username
+                    st.session_state.page = "Login"
+                    st.rerun()
 
-                    # Salvando informações no estado da sessão
-                    streamlit.session_state.username = username
-                    streamlit.session_state.page = "Login"
-                    streamlit.rerun()
-
-    # Botão para voltar para a página de login
-    with streamlit.container():
+    with st.container():
         with col3:
-            if streamlit.button("Voltar para Login", use_container_width=True):
-                streamlit.session_state.page = "Login"
-                streamlit.rerun()
+            if st.button("Voltar para Login", use_container_width=True):
+                st.session_state.page = "Login"
+                st.rerun()
 
-
-# -------------------------------------------------------------------
-# Função para atualização de senha do usuário
-# -------------------------------------------------------------------
 def update_password():
-    """
-    Gerencia o processo de recuperação e alteração da senha do usuário.
-    Inicialmente, realiza a validação dos dados informados pelo usuário.
-    Se os dados estiverem corretos, solicita a nova senha para alteração.
-    """
-    streamlit.title("Redefinir senha")
+    """Gerencia o processo de recuperação e alteração da senha do usuário."""
+    st.title("Redefinir senha")
     
-    # -------------------------------------------------------------------
-    # Se o usuário ainda não foi validado
-    # -------------------------------------------------------------------
-    if streamlit.session_state.validation == '':
-        # Entradas para dados de identificação
-        username = streamlit.text_input("Nome de usuário", placeholder="Digite nome usuário")
-        email = streamlit.text_input("Qual o email cadastrado?", placeholder="Digite seu email")
-        check_email = streamlit.text_input("Confirme seu email", placeholder="Digite novamente seu email")
-        
-        # Entrada para data de nascimento com limites definidos
-        date_of_birth = streamlit.date_input(
+    if st.session_state.validation == "":
+        username = st.text_input("Nome de usuário", placeholder="Digite nome usuário")
+        email = st.text_input("Qual o email cadastrado?", placeholder="Digite seu email")
+        check_email = st.text_input("Confirme seu email", placeholder="Digite novamente seu email")
+        date_of_birth = st.date_input(
             "Qual sua data de nascimento?",
             value=None,
             format="DD/MM/YYYY",
-            min_value=datetime(ano_minimo, 1, 1),
-            max_value=datetime(ano_maximo, 12, 31)
+            min_value=datetime(min_year, 1, 1),
+            max_value=datetime(max_year, 12, 31)
         )
-        
-        streamlit.write("")  # Espaço adicional para organização visual
-        
-        # Criação de colunas para posicionar os botões
-        c1, _, c3 = streamlit.columns([1, 1, 1])
-        
-        # Botão para validar os dados e prosseguir com a troca de senha
+        st.write("")
+        c1, _, c3 = st.columns([1, 1, 1])
         with c1:
-            if streamlit.button("Trocar a senha", use_container_width=True):
-                # Verifica se os e-mails informados coincidem
+            if st.button("Trocar a senha", use_container_width=True):
                 if email == check_email:
-                    # Realiza a verificação dos dados do usuário
                     validation = user.check_id(username, email, date_of_birth)
                     if validation:
-                        streamlit.session_state.validation = validation
+                        st.session_state.validation = validation
                     else:
-                        streamlit.error("Erro: Dados de usuário inválidos!")
-        # Botão para voltar à tela de login
+                        st.error("Erro: Dados de usuário inválidos!")
         with c3:
-            if streamlit.button("Voltar", type="primary", use_container_width=True):
-                streamlit.session_state.page = "Login"
-                streamlit.rerun()
+            if st.button("Voltar", type="primary", use_container_width=True):
+                st.session_state.page = "Login"
+                st.rerun()
                 
-    # -------------------------------------------------------------------
-    # Se o usuário já foi validado, solicita a nova senha
-    # -------------------------------------------------------------------
-    if streamlit.session_state.validation:
-        # Entradas para a nova senha e sua confirmação
-        password = streamlit.text_input("Senha", type="password", placeholder="Digite sua nova senha")
-        check_password = streamlit.text_input("Confirme a senha", type="password", placeholder="Digite novamente sua nova senha")
-        
-        streamlit.write("")  # Espaço adicional para organização visual
-        
-        # Criação de colunas para posicionar os botões
-        c1, _, c3 = streamlit.columns([1, 1, 1])
-        
-        # Botão para confirmar a alteração da senha
+    if st.session_state.validation:
+        password = st.text_input("Senha", type="password", placeholder="Digite sua nova senha")
+        check_password = st.text_input("Confirme a senha", type="password", placeholder="Digite novamente a nova senha")
+        st.write("")
+        c1, _, c3 = st.columns([1, 1, 1])
         with c1:
-            if streamlit.button("Alterar", use_container_width=True):
-                # Verifica se as senhas informadas coincidem
+            if st.button("Alterar", use_container_width=True):
                 if password == check_password:
-                    # Atualiza a senha no banco de dados
-                    user.update_password(streamlit.session_state.validation)
-                    streamlit.session_state.page = "Forget password"  # Redireciona ou atualiza a página conforme necessário
-                    streamlit.rerun()
+                    user.update_password(st.session_state.validation)
+                    st.session_state.page = "Esqueceu Senha"
+                    st.rerun()
                 else:
-                    streamlit.error("As senhas não coincidem!")
-        
-        # Botão para voltar à tela de login
+                    st.error("As senhas não coincidem!")
         with c3:
-            if streamlit.button("Voltar", type="primary", use_container_width=True):
-                streamlit.session_state.page = "Login"
-                streamlit.rerun()
-
+            if st.button("Voltar", type="primary", use_container_width=True):
+                st.session_state.page = "Login"
+                st.rerun()
 
 def main():
+    """Função principal para navegação após o login."""
     principal.main()
+
 def update_pass():
     update_password()
