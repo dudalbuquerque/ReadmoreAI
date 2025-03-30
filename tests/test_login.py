@@ -58,7 +58,14 @@ def dummy_db():
         );
     """)
     conn.commit()
-    yield conn
+    
+    class DummyDB:
+        def __init__(self, conn):
+            self.conn = conn
+            self.cursor = conn.cursor()
+    
+    dummy_db_obj = DummyDB(conn)
+    yield dummy_db_obj
     conn.close()
 
 @pytest.fixture
