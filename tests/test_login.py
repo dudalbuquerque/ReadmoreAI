@@ -53,7 +53,7 @@ def dummy_db():
             name VARCHAR(100) NOT NULL,
             date_of_birth DATE NOT NULL,
             email TEXT NOT NULL UNIQUE,
-            senha VARCHAR(8) NOT NULL,
+            password VARCHAR(8) NOT NULL,
             registration_date DATE
         );
     """)
