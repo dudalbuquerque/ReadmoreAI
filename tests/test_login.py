@@ -72,7 +72,11 @@ def dummy_db():
 def dummy_user(dummy_db):
     return users.USER(dummy_db)
 
-def test_login_success(dummy_session, monkeypatch, dummy_user):
+def test_login_success(dummy_session, monkeypatch, dummy_db, dummy_user):
+    cursor = dummy_db.conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='Readmore_users';")
+    assert cursor.fetchone() is not None, "Table Readmore_users does not exist"
+
     monkeypatch.setattr("source.initialize.user", dummy_user)
     
     dummy_user.register_user("Maria", "1985-05-05", "maria@example.com", "pass1234")
