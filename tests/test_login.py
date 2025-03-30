@@ -1,7 +1,8 @@
 import streamlit as st
 import pytest
+import sqlite3
+from database import users
 from source import login
-from source.initialize import user
 
 class DummySessionState(dict):
     def __init__(self):
@@ -24,10 +25,8 @@ def dummy_button(label, **kwargs):
 class DummyContainer:
     def button(self, label, **kwargs):
         return dummy_button(label, **kwargs)
-    
     def __enter__(self):
         return self
-    
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
@@ -37,17 +36,39 @@ def dummy_columns(sizes):
 @pytest.fixture
 def dummy_session(monkeypatch):
     session_state = DummySessionState()
-
     monkeypatch.setattr(st, "session_state", session_state)
     monkeypatch.setattr(st, "rerun", dummy_rerun)
     monkeypatch.setattr(st, "text_input", dummy_text_input)
     monkeypatch.setattr(st, "button", dummy_button)
     monkeypatch.setattr(st, "columns", lambda sizes: dummy_columns(sizes))
-
     return session_state
 
-def test_login_success(dummy_session, monkeypatch):
-    user.register_user("Maria", "1985-05-05", "maria@example.com", "pass1234")
+@pytest.fixture
+def dummy_db():
+    conn = sqlite3.connect(":memory:")
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE Readmore_users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            name VARCHAR(100) NOT NULL,
+            date_of_birth DATE NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            senha VARCHAR(8) NOT NULL,
+            registration_date DATE
+        );
+    """)
+    conn.commit()
+    yield conn
+    conn.close()
+
+@pytest.fixture
+def dummy_user(dummy_db):
+    return users.USER(dummy_db)
+
+def test_login_success(dummy_session, monkeypatch, dummy_user):
+    monkeypatch.setattr("source.initialize.user", dummy_user)
+    
+    dummy_user.register_user("Maria", "1985-05-05", "maria@example.com", "pass1234")
     login.login()
     
     assert dummy_session.get("username") == "Maria"
