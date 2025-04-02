@@ -1,5 +1,6 @@
 import streamlit as st
 import pytest
+import sqlite3
 from source import login
 from source.initialize import user
 
@@ -34,6 +35,23 @@ class DummyContainer:
 def dummy_columns(sizes):
     return (DummyContainer(), DummyContainer(), DummyContainer())
 
+def setup_database():
+    conn = sqlite3.connect("database.db")  # Certifique-se de que este é o caminho correto
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Readmore_users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        data_nascimento TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        senha TEXT NOT NULL
+    )
+    """)
+    
+    conn.commit()
+    conn.close()
+
 @pytest.fixture
 def dummy_session(monkeypatch):
     session_state = DummySessionState()
@@ -47,6 +65,7 @@ def dummy_session(monkeypatch):
     return session_state
 
 def test_login_success(dummy_session, monkeypatch):
+    setup_database()  # Garantir que a tabela existe antes do teste
     user.register_user("Maria", "1985-05-05", "maria@example.com", "pass1234")
     login.login()
     
