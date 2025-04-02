@@ -3,7 +3,7 @@ import google.generativeai as genai
 from database import create, books, users
 
 # Configuração da API do Google Generative AI (único ponto de configuração)
-genai.configure(api_key="AIzaSyCW1jKDPvrpHFZY1Jc_uiPfz559i8Pwn-s")
+genai.configure(api_key="-")
 model = genai.GenerativeModel("gemini-2.0-flash")
 
 # Conexão com o banco de dados
