@@ -3,7 +3,7 @@ from source.initialize import session_state
 from source.mybooks import show_books
 from source.suggested import show_books_suggested
 from source.searchbook import suggest_books
-from source.my_information import my_information
+from source.myinformation import myinformation
 
 def main():
     """Página principal com navegação e opção de logout na barra lateral."""
@@ -16,5 +16,5 @@ def main():
     with tab3:
         suggest_books()
     with tab4:
-        my_information()
+        myinformation()
 

@@ -3,7 +3,7 @@ import sys
 import streamlit as st
 from source.initialize import session_state, book_user
 
-def my_information():
+def myinformation():
     amount = book_user.book_count(st.session_state.id)
     st.markdown(f"#### Olá {st.session_state.username}")
     st.write(" ")
