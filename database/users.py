@@ -1,5 +1,3 @@
-import streamlit
-
 class USER:
     def __init__(self, db):
             self.db = db
@@ -10,7 +8,7 @@ class USER:
             if self.db.cursor.fetchone():
                 return False
             
-            # insere o novo usuário
+            # insere o novo usuÃ¡rio
             self.db.cursor.execute(
                 """
                 INSERT INTO Readmore_users(name, date_of_birth, email, password, registration_date)
