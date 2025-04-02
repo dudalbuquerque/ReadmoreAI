@@ -1,25 +1,20 @@
 import streamlit as st
 from source.initialize import session_state
+from source.mybooks import show_books
+from source.suggested import show_books_suggested
+from source.searchbook import suggest_books
+from source.my_information import my_information
 
 def main():
     """Página principal com navegação e opção de logout na barra lateral."""
-    pages = {
-        "ReadmoreAI": [
-            st.Page("source/mybooks.py", title="Meus Livros"),
-            st.Page("source/suggested.py", title="Lista de livros sugeridos"),
-            st.Page("source/searchbook.py", title="Buscar Livro"),
-        ],
-    }
-    pg = st.navigation(pages)
-    pg.run()
-    with st.sidebar:
-        col1, _, col3 = st.columns([1, 1, 1])
-        with col1:
-            st.write(st.session_state.username)
-        with col3:
-            if st.button("Logout", type="primary", use_container_width=True):
-                st.session_state.page = "Login"
-                st.rerun()
+    tab1, tab2, tab3, tab4 = st.tabs(["Meus Livros", "Lista de livros sugeridos", "Buscar Livro", "Minhas informações"])
 
-if __name__ == "__main__":
-    main()
+    with tab1:
+        show_books()
+    with tab2:
+        show_books_suggested()
+    with tab3:
+        suggest_books()
+    with tab4:
+        my_information()
+
