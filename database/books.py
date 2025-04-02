@@ -97,3 +97,24 @@ class BOOK:
         amount_not_read = self.db.cursor.fetchone()[0] 
         return amount_read, amount_not_read
     
+    def update_book(self, user_id, book_name, book_author, book_genre, book_assessment):
+        query = """
+            UPDATE Readmore_books 
+            SET assessment = ? 
+            WHERE user_id = ? AND title = ? AND author = ? AND genre = ?
+        """
+        self.db.cursor.execute(query, (book_assessment, user_id, book_name, book_author, book_genre))
+        self.db.conn.commit()
+    
+    def add_book(self, user_id, book_name, book_author, book_genre, book_assessment):
+        query = """
+            UPDATE Readmore_books 
+            SET read = ?, assessment = ?
+            WHERE user_id = ? AND title = ? AND author = ? AND genre = ?
+        """
+        self.db.cursor.execute(query, (True, book_assessment, user_id, book_name, book_author, book_genre))
+        self.db.conn.commit()
+
+    
+    
+

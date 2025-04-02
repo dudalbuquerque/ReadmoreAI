@@ -66,7 +66,7 @@ def display_books_suggested_details(book):
                     st.write(" ")
                     if st.button("✅ Salvar", use_container_width=True):
                         # Atualiza o livro no banco de dados
-                        book_user.update_book(
+                        book_user.add_book(
                             st.session_state.id, book[0], book[1], book[2], st.session_state.book_assessment+1
                         )
                         st.session_state.clicked_book_suggest = ''  # Limpa o estado do livro
