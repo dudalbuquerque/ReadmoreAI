@@ -36,7 +36,7 @@ def dummy_columns(sizes):
     return (DummyContainer(), DummyContainer(), DummyContainer())
 
 def setup_database():
-    conn = sqlite3.connect("database.db")  # Certifique-se de que este é o caminho correto
+    conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
     
     cursor.execute("""
@@ -62,11 +62,22 @@ def dummy_session(monkeypatch):
     monkeypatch.setattr(st, "button", dummy_button)
     monkeypatch.setattr(st, "columns", lambda sizes: dummy_columns(sizes))
 
+    setup_database()  # Criar a tabela antes do teste rodar
+
     return session_state
 
 def test_login_success(dummy_session, monkeypatch):
-    setup_database()  # Garantir que a tabela existe antes do teste
-    user.register_user("Maria", "1985-05-05", "maria@example.com", "pass1234")
+    # Criar a tabela antes de cadastrar usuário
+    setup_database()
+
+    # Registrar usuário no mesmo banco
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Readmore_users (nome, data_nascimento, email, senha) VALUES (?, ?, ?, ?)",
+                   ("Maria", "1985-05-05", "maria@example.com", "pass1234"))
+    conn.commit()
+    conn.close()
+
     login.login()
     
     assert dummy_session.get("username") == "Maria"
