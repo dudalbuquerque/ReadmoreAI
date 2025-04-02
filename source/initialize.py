@@ -18,7 +18,6 @@ def session_state():
         "clicked_book": "",
         "clicked_book_suggest": "",
         "clicked_add": "",
-        "menu_expanded": True,
         "validation": "",
         "username": "",
         "id": "",
@@ -28,6 +27,7 @@ def session_state():
         "titles": [],
         "messages": [],
         "book_input": False,
+        "show_stars": False,
         "sugeridos": [],
         "nomes_sugeridos": []
     }
