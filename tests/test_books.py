@@ -163,6 +163,6 @@ def test_delete_book(book_module, dummy_db):
     )
 
     book_id = book_module.get_idbook("Livro para Deletar", user_id)
-    book_module.delete_book("Livro para Deletar", book_id, user_id)
+    book_module.delete_book(book_id, user_id)
     result = dummy_db.procurando_livro("Livro para Deletar")
     assert result is None
