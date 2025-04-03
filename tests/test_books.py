@@ -149,6 +149,7 @@ def test_books_list(book_module):
     list_drama = book_module.books_list(user_id, "Drama")
     assert any("Livro Especifico" in book for book in list_drama)
 
+
 def test_delete_book(book_module, dummy_db):
     user_id = 1
 
